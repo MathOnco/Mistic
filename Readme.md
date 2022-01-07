@@ -6,7 +6,7 @@ A sample Bokeh GUI with user inputs is shown below:
 
 <img src=/fig_readme/GUI_Mistic.png width="80%"></img>
 
-Additional details can be found in the paper here: https://www.biorxiv.org/content/10.1101/2021.10.08.463728v1. Mistic is also highlighted on Boke's user showcase: http://bokeh.org/ 
+Additional details can be found in the paper here: https://www.biorxiv.org/content/10.1101/2021.10.08.463728v1. Mistic is also highlighted on Bokeh's user showcase: http://bokeh.org/ 
 
 ## Features of MIsTic
 * Two canvases: 
