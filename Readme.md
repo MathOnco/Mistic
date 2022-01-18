@@ -8,7 +8,7 @@ A sample Bokeh GUI with user inputs is shown below:
 
 Additional details can be found in the paper here: https://www.biorxiv.org/content/10.1101/2021.10.08.463728v1. Mistic is also highlighted on Bokeh's user showcase: http://bokeh.org/ 
 
-## Features of MIsTic
+## Features of Mistic
 * Two canvases: 
   *   still canvas with the image tSNE rendering 
   *   live canvases with tSNE scatter plots for image metadata rendering
@@ -22,7 +22,7 @@ Additional details can be found in the paper here: https://www.biorxiv.org/conte
 
 ## Requirements
 
-* Python 3.6 (may work on other versions but has not been tested)
+* Python 3.6 (code also tested and runs on Python 3.7)
   * Install Python from here: https://www.python.org/downloads/
 <!---* bokeh 0.12.16 -->
   <!---* For installation, open terminal and type: ``` pip install bokeh ```-->
@@ -35,6 +35,10 @@ Additional details can be found in the paper here: https://www.biorxiv.org/conte
 
 ## Run the application
 
+* Download this code repository or Open Terminal and use `git clone`
+
+ `$ git clone https://github.com/MathOnco/Mistic`
+ 
 * In the Mistic folder, navigate to /user_inputs folder to upload input files:
   * ```Mistic_code/bokeh_GUI/bokeh-branch-2.3/examples/app/user_inputs/```
   * Use the /figures folder to upload the multiplexed images
