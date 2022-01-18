@@ -36,8 +36,7 @@ Additional details can be found in the paper here: https://www.biorxiv.org/conte
 ## Run the application
 
 * Download this code repository or Open Terminal and use `git clone`
-
- `$ git clone https://github.com/MathOnco/Mistic`
+  `$ git clone https://github.com/MathOnco/Mistic.git`
  
 * In the Mistic folder, navigate to /user_inputs folder to upload input files:
   * ```Mistic_code/bokeh_GUI/bokeh-branch-2.3/examples/app/user_inputs/```
