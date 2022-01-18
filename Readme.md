@@ -1,4 +1,4 @@
-# MIsTic: image tSNE visualizer
+# Mistic: image tSNE visualizer
 
 This is a Python tool using the Bokeh library to view multiple multiplex images simultaneously. Currently the code supports 7-panel Vectra images.
 
