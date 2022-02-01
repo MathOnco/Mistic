@@ -52,7 +52,7 @@ Additional details can be found in the paper here: https://www.biorxiv.org/conte
       * Patent response as Response_categories.csv 
     * Sample metadata files are provided for reference 
 
-* The main application is located in the /app folder:
+* The main application is located in the /image_tSNE_GUI folder:
   * ```Mistic_code/code/image_tSNE_GUI/```
 * Open a command prompt (or the Terminal application), change to the directory containing /code and type
   *  ```pip install -r requirements.txt``` 
