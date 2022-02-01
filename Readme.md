@@ -12,7 +12,7 @@ Additional details can be found in the paper here: https://www.biorxiv.org/conte
 * Two canvases: 
   *   still canvas with the image tSNE rendering 
   *   live canvases with tSNE scatter plots for image metadata rendering
-* Checkbox to choose the markers to be visualised at once
+* Option to choose between Stack montage view or multiple multiplexed images by selecting the markers to be visualised at once
 * Option to place a border around each image based on image metadata
 * Option to use a pre-defined tSNE or generate a new set of tSNE co-ordinates
 * Option to shuffle images with the tSNE co-ordinates
@@ -40,7 +40,7 @@ Additional details can be found in the paper here: https://www.biorxiv.org/conte
   `$ git clone https://github.com/MathOnco/Mistic.git`
  
 * In the Mistic folder, navigate to /user_inputs folder to upload input files:
-  * ```Mistic_code/bokeh_GUI/bokeh-branch-2.3/examples/app/user_inputs/```
+  * ```Mistic_code/code/user_inputs/```
   * Use the /figures folder to upload the multiplexed images
   * Use the /metadata folder to upload the imaging markers of interest as Markers_ids.csv
   * (Optional) Use the /metadata folder to 
@@ -53,7 +53,7 @@ Additional details can be found in the paper here: https://www.biorxiv.org/conte
     * Sample metadata files are provided for reference 
 
 * The main application is located in the /app folder:
-  * ```Mistic_code/bokeh_GUI/bokeh-branch-2.3/examples/app/```
+  * ```Mistic_code/code/image_tSNE_GUI/```
 * Open a command prompt (or the Terminal application), change to the directory containing /app and type
   *  ```pip install -r requirements.txt``` 
 * Upon successful completion of the previous step, Mistic can be run. To run the application, at the command prompt pointing to /app, type
