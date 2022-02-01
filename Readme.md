@@ -54,7 +54,7 @@ Additional details can be found in the paper here: https://www.biorxiv.org/conte
 
 * The main application is located in the /app folder:
   * ```Mistic_code/code/image_tSNE_GUI/```
-* Open a command prompt (or the Terminal application), change to the directory containing /app and type
+* Open a command prompt (or the Terminal application), change to the directory containing /code and type
   *  ```pip install -r requirements.txt``` 
 * Upon successful completion of the previous step, Mistic can be run. To run the application, at the command prompt pointing to /app, type
   * ```bokeh serve --port 5098 --show image_tSNE_GUI```
