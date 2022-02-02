@@ -56,6 +56,6 @@ Additional details can be found in the paper here: https://www.biorxiv.org/conte
   * ```Mistic_code/code/image_tSNE_GUI/```
 * Open a command prompt (or the Terminal application), change to the directory containing /code and type
   *  ```pip install -r requirements.txt``` 
-* Upon successful completion of the previous step, Mistic can be run. To run the application, at the command prompt pointing to /app, type
+* Upon successful completion of the previous step, Mistic can be run. To run the application, at the command prompt pointing to /code, type
   * ```bokeh serve --port 5098 --show image_tSNE_GUI```
   * This runs a bokeh server locally and will automatically open the interactive dashboard in your browser at http://localhost:5098/image_tSNE_GUI
