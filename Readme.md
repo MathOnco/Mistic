@@ -1,15 +1,13 @@
 # Mistic: image tSNE visualizer
 
-This is a Python tool using the Bokeh library to view multiple multiplex images simultaneously. Currently the code supports 7-panel Vectra images.
+This is a Python tool using the Bokeh library to view multiple multiplex images simultaneously. The code has been tested on 7-panel Vectra and 44-marker t-CyCIF images.
 
-A sample Bokeh GUI with user inputs is shown below:
+Mistic's GUI with user inputs is shown below:
 
 <img src=/fig_readme/Figure_2.jpg width="80%"></img>
 
-Mistic GUI. A. User-input panel where stack montage option or markers can be selected, images borders can be added, new or pre-defined image display coordinates can be chosen, and a theme for the canvases can be selected. B. Static canvas showing the image t-SNE colored and arranged as per user inputs. C. Live canvas showing the corresponding t-SNE scatter plot where each image is represented as a dot. The live canvas has tabs for displaying additional information per image. Metadata for each image can be obtained by hovering over each dot. 
+Figure description: A. User-input panel where stack montage option or markers can be selected, images borders can be added, new or pre-defined image display coordinates can be chosen, and a theme for the canvases can be selected. B. Static canvas showing the image t-SNE colored and arranged as per user inputs. C. Live canvas showing the corresponding t-SNE scatter plot where each image is represented as a dot. The live canvas has tabs for displaying additional information per image. Metadata for each image can be obtained by hovering over each dot. 
 
-
-Additional details can be found in the paper here: https://www.biorxiv.org/content/10.1101/2021.10.08.463728v1. Mistic is also highlighted on Bokeh's user showcase: http://bokeh.org/ 
 
 ## Features of Mistic
 * Two canvases: 
@@ -45,9 +43,11 @@ Additional details can be found in the paper here: https://www.biorxiv.org/conte
 * In the Mistic folder, navigate to /user_inputs folder to upload input files:
   * ```Mistic_code/code/user_inputs/```
   * Use the /figures folder to upload the multiplexed images
-  * Use the /metadata folder to upload the imaging markers of interest as Markers_ids.csv
+  * Use the /metadata folder to upload the imaging markers of interest as Markers_ids.csv and markers.csv. 
+    * For the Stack Montage option, only the markers.csv file is required. 
   * (Optional) Use the /metadata folder to 
     * Upload image tSNE co-ordinates as X_imagetSNE.csv
+      * If no user-generated tSNE co-ordinates are provided, Mistic will generate a set of random coordinates to render the images
     * Upload image metadata such as 
       * Cluster labels as Cluster_categories.csv
       * Patient_ids as Patient_ids.csv
@@ -62,3 +62,10 @@ Additional details can be found in the paper here: https://www.biorxiv.org/conte
 * Upon successful completion of the previous step, Mistic can be run. To run the application, at the command prompt pointing to /code, type
   * ```bokeh serve --port 5098 --show image_tSNE_GUI```
   * This runs a bokeh server locally and will automatically open the interactive dashboard in your browser at http://localhost:5098/image_tSNE_GUI
+
+
+## Addtional information
+
+* Additional details can be found in the paper here: https://www.biorxiv.org/content/10.1101/2021.10.08.463728v1
+* Mistic is also highlighted on Bokeh's user showcase: http://bokeh.org/
+* Code has been published at Zenodo: https://doi.org/10.5281/zenodo.5912169 (Mistic Version v1.0.1)
