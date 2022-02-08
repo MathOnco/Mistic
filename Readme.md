@@ -4,7 +4,7 @@ This is a Python tool using the Bokeh library to view multiple multiplex images 
 
 A sample Bokeh GUI with user inputs is shown below:
 
-<img src=/fig_readme/Figure\_2.jpeg width="80%"></img>
+<img src=/fig_readme/Figure\_2.jpg width="80%"></img>
 
 Additional details can be found in the paper here: https://www.biorxiv.org/content/10.1101/2021.10.08.463728v1. Mistic is also highlighted on Bokeh's user showcase: http://bokeh.org/ 
 
