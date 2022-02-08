@@ -6,6 +6,9 @@ A sample Bokeh GUI with user inputs is shown below:
 
 <img src=/fig_readme/Figure_2.jpg width="80%"></img>
 
+Mistic GUI. A. User-input panel where stack montage option or markers can be selected, images borders can be added, new or pre-defined image display coordinates can be chosen, and a theme for the canvases can be selected. B. Static canvas showing the image t-SNE colored and arranged as per user inputs. C. Live canvas showing the corresponding t-SNE scatter plot where each image is represented as a dot. The live canvas has tabs for displaying additional information per image. Metadata for each image can be obtained by hovering over each dot. ![image](https://user-images.githubusercontent.com/14878558/153057585-0ba1ce12-9682-4e7c-8146-36d0a33f04a2.png)
+
+
 Additional details can be found in the paper here: https://www.biorxiv.org/content/10.1101/2021.10.08.463728v1. Mistic is also highlighted on Bokeh's user showcase: http://bokeh.org/ 
 
 ## Features of Mistic
