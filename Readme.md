@@ -67,7 +67,7 @@ Figure description: A. User-input panel where stack montage option or markers ca
 * For detailed instructions on how to run Mistic on the t-CyCIF data, please check: https://mistic-rtd.readthedocs.io/en/latest/vignette_example.html
 
 
-## Addtional information
+## Additional information
 
 * Additional details can be found in the paper here: https://www.biorxiv.org/content/10.1101/2021.10.08.463728v1
 * Mistic is also highlighted on Bokeh's user showcase: http://bokeh.org/
