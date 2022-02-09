@@ -52,7 +52,7 @@ Figure description: A. User-input panel where stack montage option or markers ca
       * Cluster labels as Cluster_categories.csv
       * Patient_ids as Patient_ids.csv
       * Treatments as Treatment_catgories.csv
-      * Patent response as Response_categories.csv 
+      * Patient response as Response_categories.csv 
       * If any of these are available, Mistic will use either the randomly-generated or user-provided tSNE points without any color coding i.e. dots are colored in gray.
     * Sample metadata files are provided for reference in the /metadata folder
 
