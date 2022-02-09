@@ -53,7 +53,8 @@ Figure description: A. User-input panel where stack montage option or markers ca
       * Patient_ids as Patient_ids.csv
       * Treatments as Treatment_catgories.csv
       * Patent response as Response_categories.csv 
-    * Sample metadata files are provided for reference 
+      * If none of these are available, Mistic will use either the randomly-generated or user-provided tSNE points without any color coding i.e. dots are colored in gray.
+    * Sample metadata files are provided for reference in the /metadata folder
 
 * The main application is located in the /image_tSNE_GUI folder:
   * ```Mistic_code/code/image_tSNE_GUI/```
@@ -63,7 +64,7 @@ Figure description: A. User-input panel where stack montage option or markers ca
   * ```bokeh serve --port 5098 --show image_tSNE_GUI```
   * This runs a bokeh server locally and will automatically open the interactive dashboard in your browser at http://localhost:5098/image_tSNE_GUI
 
-
+  * 
 ## Addtional information
 
 * Additional details can be found in the paper here: https://www.biorxiv.org/content/10.1101/2021.10.08.463728v1
