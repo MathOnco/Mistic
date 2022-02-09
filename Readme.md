@@ -53,7 +53,7 @@ Figure description: A. User-input panel where stack montage option or markers ca
       * Patient_ids as Patient_ids.csv
       * Treatments as Treatment_catgories.csv
       * Patent response as Response_categories.csv 
-      * If none of these are available, Mistic will use either the randomly-generated or user-provided tSNE points without any color coding i.e. dots are colored in gray.
+      * If any of these are available, Mistic will use either the randomly-generated or user-provided tSNE points without any color coding i.e. dots are colored in gray.
     * Sample metadata files are provided for reference in the /metadata folder
 
 * The main application is located in the /image_tSNE_GUI folder:
