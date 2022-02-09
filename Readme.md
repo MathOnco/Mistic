@@ -64,7 +64,7 @@ Figure description: A. User-input panel where stack montage option or markers ca
   * ```bokeh serve --port 5098 --show image_tSNE_GUI```
   * This runs a bokeh server locally and will automatically open the interactive dashboard in your browser at http://localhost:5098/image_tSNE_GUI
 
-  * 
+* rtd
 ## Addtional information
 
 * Additional details can be found in the paper here: https://www.biorxiv.org/content/10.1101/2021.10.08.463728v1
