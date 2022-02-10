@@ -43,17 +43,19 @@ Figure description: A. User-input panel where stack montage option or markers ca
 * In the Mistic folder, navigate to /user_inputs folder to upload input files:
   * ```Mistic_code/code/user_inputs/```
   * Use the /figures folder to upload the multiplexed images
-  * Use the /metadata folder to upload the imaging markers of interest as Markers_ids.csv and markers.csv. 
-    * For the Stack Montage option, only the markers.csv file is required. 
-  * (Optional) Use the /metadata folder to 
-    * Upload image tSNE co-ordinates as X_imagetSNE.csv
-      * If no user-generated tSNE co-ordinates are provided, Mistic will generate a set of random coordinates to render the images
-    * Upload image metadata such as 
-      * Cluster labels as Cluster_categories.csv
-      * Patient_ids as Patient_ids.csv
-      * Treatments as Treatment_catgories.csv
-      * Patient response as Response_categories.csv 
-      * If any of these are available, Mistic will use either the randomly-generated or user-provided tSNE points without any color coding i.e. dots are colored in gray.
+  * Use the /metadata folder to 
+    * Upload the imaging markers of interest as Markers_ids.csv and markers.csv. 
+       * Example files are provided in the metadata folder
+       * Note: For the Stack Montage option, only the markers.csv file is required. 
+    * Optional uploads:
+      * Upload image tSNE co-ordinates as X_imagetSNE.csv
+        * If no user-generated tSNE co-ordinates are provided, Mistic will generate a set of random coordinates to render the images
+      * Upload image metadata such as 
+        * Cluster labels as Cluster_categories.csv
+        * Patient_ids as Patient_ids.csv
+        * Treatments as Treatment_catgories.csv
+        * Patient response as Response_categories.csv 
+        * If any of these are unavailable, Mistic will use either the randomly-generated or user-provided tSNE points without any color coding i.e. dots are colored in gray.
     * Sample metadata files are provided for reference in the /metadata folder
 
 * The main application is located in the /image_tSNE_GUI folder:
