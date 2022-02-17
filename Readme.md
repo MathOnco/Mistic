@@ -13,6 +13,7 @@ Figure description: A sample Mistic GUI with user inputs is shown. **A.** User-i
 * Two canvases: 
   *   still canvas with the image tSNE rendering 
   *   live canvases with tSNE scatter plots for image metadata rendering
+* Dropdown option to select the imaging technique: Vectra, t-CyCIF, or CODEX
 * Option to choose between Stack montage view or multiple multiplexed images by selecting the markers to be visualised at once
 * Option to place a border around each image based on image metadata
 * Option to use a pre-defined tSNE or generate a new set of tSNE co-ordinates
