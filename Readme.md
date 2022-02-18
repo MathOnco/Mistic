@@ -67,7 +67,8 @@ Figure description: A sample Mistic GUI with user inputs is shown. **A.** User-i
   * ```bokeh serve --port 5098 --show image_tSNE_GUI```
   * This runs a bokeh server locally and will automatically open the interactive dashboard in your browser at http://localhost:5098/image_tSNE_GUI
 
-* For detailed instructions on how to run Mistic on the t-CyCIF data, please check: https://mistic-rtd.readthedocs.io/en/latest/vignette_example.html
+* For instructions on how to run Mistic on the t-CyCIF data, please check: https://mistic-rtd.readthedocs.io/en/latest/vignette_example_tcycif.html
+* For instructions on how to run Mistic on the toy data from our NSCLC Vectra FoVs, please check:https://mistic-rtd.readthedocs.io/en/latest/vignette_example_vectra.html
 
 
 ## Additional information
