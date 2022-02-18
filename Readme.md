@@ -76,3 +76,7 @@ Figure description: A sample Mistic GUI with user inputs is shown. **A.** User-i
 * Additional details can be found in the paper here: https://www.biorxiv.org/content/10.1101/2021.10.08.463728v1
 * Mistic is also highlighted on Bokeh's user showcase: http://bokeh.org/
 * Code has been published at Zenodo: https://doi.org/10.5281/zenodo.5912169 (Mistic Version v1.0.1)
+* Toy data is published here: https://doi.org/10.5281/zenodo.6131933
+
+
+
