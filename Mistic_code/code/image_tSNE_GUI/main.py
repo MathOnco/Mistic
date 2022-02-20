@@ -10,10 +10,14 @@
 ### github version
 ### 19th Jan 2022
 ### added Patient id live canvas
-### 26th Jan 2022 ###
+### 26th Jan 2022 
 ### merging the stack montage code 
 ### prior version is main_rollback. 
-
+### 14th Feb 2022
+### adding codex, tcycif, vectra option 
+### prior version is main_rollback_1
+### 20th Feb 2022
+### code cleanup for github upload
 
 
 
@@ -94,7 +98,7 @@ from bokeh.themes import Theme
 from bokeh.models.widgets import Panel, Tabs
 from bokeh.io import output_file, show
 
-## 26th Jan 2022
+
 ##
 import skimage.io as io
 import tifffile
@@ -105,11 +109,11 @@ from PIL import TiffImagePlugin
 
 ### image-tSNE
 
-width = 5000 #15000
+width = 5000 
 height = 5000
 max_dim = 500
-tw =1200 # 1344
-th = 900 #1008
+tw =1200 
+th = 900 
 
 full_image_1 = Image.new('RGBA', (width, height))
 
@@ -117,16 +121,17 @@ full_image_1 = Image.new('RGBA', (width, height))
 
 ##############################################################
  
-##### Function definitions ##############################
+################## Function definitions ######################
 
 ##############################################################
 
 
-##############################################################
-### get_cell_coords(), get_neighbours(), point_valid(), get_point() are functions to generate random points
-##### functions modified from: 
-##### https://scipython.com/blog/poisson-disc-sampling-in-python/ ####
-##############################################################
+#######################################################################
+#####  get_cell_coords(), get_neighbours(), point_valid(),         ####
+#####  get_point() are functions to generate random points         ####
+#####  functions modified from:                                    ####
+#####  https://scipython.com/blog/poisson-disc-sampling-in-python/ ####
+#######################################################################
 
 
 
@@ -200,13 +205,13 @@ def get_point(k, refpt,r,a,nx,ny,cells,samples):
     # We failed to find a suitable point in the vicinity of refpt.
     return False
 
-###########################################################
-### draw_tSNE_scatter()
-### a) creates the metadata-based tSNE scatter plots
-### b) populates the hover functionality for each tSNE dot
-###########################################################
+###############################################################
+### draw_tSNE_scatter()                                    ####
+### a) creates the metadata-based tSNE scatter plots       #### 
+### b) populates the hover functionality for each tSNE dot ####
+###############################################################
 
-def draw_tSNE_scatter(tsne1, file_name_hover):
+def draw_tSNE_scatter(tsne1, file_name_hover,cluster_ms_list ):
     tsne=np.asarray(tsne1)    
     
     source = ColumnDataSource(data=dict(
@@ -221,10 +226,10 @@ def draw_tSNE_scatter(tsne1, file_name_hover):
         clust_asgn_list = clust_asgn_list,
         color_vec_clasgn_list = color_vec_clasgn,
         cluster_anno_list = cluster_anno_list,
-        cluster_ms_list = cluster_ms_list, #20th jan 2022
-        cluster_pat_list = cluster_pat_list, #19th Jan 2022
-        color_vec_patid_list = color_vec_patid, #19th Jan 2022
-        file_name_hover_list = file_name_hover #19th Jan 2022
+        cluster_ms_list = cluster_ms_list, 
+        cluster_pat_list = cluster_pat_list, 
+        color_vec_patid_list = color_vec_patid, 
+        file_name_hover_list = file_name_hover 
         #legend_p11 = legend_p1
     ))
     TOOLS="hover,pan,crosshair,wheel_zoom,zoom_in,zoom_out,box_zoom,undo,redo,reset,tap,save,box_select,poly_select,lasso_select,"
@@ -234,10 +239,10 @@ def draw_tSNE_scatter(tsne1, file_name_hover):
         ("(x,y)", "($x, $y)"),
         ("Pat_id", "@pat_list"),
         ("Response", "@res_list"),
-        ("Treatment", "@tx_list"), #19th Jan 2022
-        ("Cluster id", "@clust_asgn_list"), #19th Jan 2022
-        ("Channel", "@cluster_ms_list"), #20th jan 2022
-        ("Thumbnail", "@file_name_hover_list"), #19th Jan 2022
+        ("Treatment", "@tx_list"), 
+        ("Cluster id", "@clust_asgn_list"), 
+        ("Channel", "@cluster_ms_list"), 
+        ("Thumbnail", "@file_name_hover_list"), 
         ("FoV","@fov_list")
     ]
 
@@ -246,24 +251,24 @@ def draw_tSNE_scatter(tsne1, file_name_hover):
 
     p1 = figure(plot_width=400, plot_height=400, tooltips=TOOLTIPS,tools = TOOLS,
                title="Patient response")
-    #26th Feb 2021
+
     p1.scatter('x', 'y', size=10, source=source, legend= 'res_list', color = 'color_vec_list',fill_alpha=0.6)
     p1.legend.location = "bottom_left"
 
-    #8th June 2021
+
     p2 = figure(plot_width=400, plot_height=400, tooltips=TOOLTIPS,tools = TOOLS,
                title="Treatment category")
     p2.scatter('x', 'y', size=10, source=source, legend= 'tx_list', color = 'color_vec_tx_list',fill_alpha=0.6)
     p2.legend.location = "bottom_left"
     
-    #8th June 2021
+
     p3 = figure(plot_width=400, plot_height=400, tooltips=TOOLTIPS,tools = TOOLS,
                title="Cluster annotations")
     p3.scatter('x', 'y', size=10, source=source, legend= 'cluster_anno_list', color = 'color_vec_clasgn_list',fill_alpha=0.6)
     p3.legend.location = "bottom_left"
 
     
-    #19th Jan 2022
+
     p4 = figure(plot_width=400, plot_height=400, tooltips=TOOLTIPS,tools = TOOLS,
                title="Patient id")
     p4.scatter('x', 'y', size=10, source=source, legend= 'cluster_pat_list', color = 'color_vec_patid_list',fill_alpha=0.6)
@@ -273,37 +278,29 @@ def draw_tSNE_scatter(tsne1, file_name_hover):
     return ([p1,p2,p3,p4, source])
 
 
-###
-
-                            
 
 
 
-
-
-
-
-###########################################################
-### generate_stack_montage()
-### a) reads in and processes the image channels
-### b) generates evenly-spaced points on the static canvas to arrange the images in rows
-### c) reads in the user-provided tSNE
-### d) generates thumbnails, and pastes these onto the static canvas
-### e) stores the thumbnails in the output folder
-### f) updates the hover tool with thumbnail paths
-###########################################################  
+##############################################################################################
+### generate_stack_montage()                                                              ####
+### a) reads in and processes the image channels                                          ####
+### b) generates evenly-spaced points on the static canvas to arrange the images in rows  ####
+### c) generates thumbnails, and pastes these onto the static canvas                      ####
+### d) stores the thumbnails in the output folder                                         ####
+### e) updates the hover tool with thumbnail paths, marker names and metadata             ####
+##############################################################################################  
     
     
-################## 26th jan 2022
-def generate_stack_montage(chk_box_marker_sm, LABELS_MARKERS):
+################## 
+def generate_stack_montage(chk_box_marker_sm, rb_imtech_val, LABELS_MARKERS):
     
 
     
     full_image = Image.new('RGBA', (width, height))
     size = [256,256]
 
-    file_name_hover = [] # 19th Jan 2022
-    file_name_hover_list = [] # 19th Jan 2022    
+    file_name_hover = [] 
+    file_name_hover_list = []    
 
     # Choose up to k points around each reference point as candidates for a new
     # sample point
@@ -325,7 +322,7 @@ def generate_stack_montage(chk_box_marker_sm, LABELS_MARKERS):
     coords_list = [(ix, iy) for ix in range(nx) for iy in range(ny)]
 
 
-    #logic to get grid points - 29th March 2021
+    #logic to get grid points 
     m = np.int(np.floor(nx*ny/num_images))
 
 
@@ -348,7 +345,7 @@ def generate_stack_montage(chk_box_marker_sm, LABELS_MARKERS):
     df_Xtsne.to_csv(os.path.join(path_wd + '/user_inputs/metadata/X_imagetSNE_sm.csv'), header=None, index=None)
 
             
-    # 26th spril 2021
+
     # save the tSNE points to bve read later on irrespective of whoch option was chosen
     df_Xtsne_touse = pd.DataFrame(tsne)
     df_Xtsne_touse.to_csv(os.path.join(path_wd + '/user_inputs/metadata/X_imagetSNE_touse_sm.csv'), header=None, index=None)
@@ -365,11 +362,10 @@ def generate_stack_montage(chk_box_marker_sm, LABELS_MARKERS):
 
 
     for k in range(len(inds)):
-        #print('KKKKK', k)
+      
         image_all_2 = []
         image_all_1 = []
-        #im = io.imread(marker_image_list[inds[k]])#,plugin='matplotlib') #26th jan 2022
-        #im = tifffile.imread(marker_image_list[inds[k]])
+
         im = Image.open(marker_image_list[inds[k]])
              
             
@@ -388,7 +384,7 @@ def generate_stack_montage(chk_box_marker_sm, LABELS_MARKERS):
 
 
             print('thresh is: ', str(thresh))
-            #thresh = 12
+            
             bw = closing(image > thresh, square(1))
 
             # remove artifacts connected to image border
@@ -399,15 +395,18 @@ def generate_stack_montage(chk_box_marker_sm, LABELS_MARKERS):
 
         tl = sum(image_all_1)
         
-        tile_1 = Image.fromarray(np.uint8(cm.jet(tl)*255))
+        if (rb_imtech_val ==0): #vectra
+            tile_1 = Image.fromarray(np.uint8(cm.viridis(tl)*255))
 
-
-
+        elif (rb_imtech_val ==1): #t-CyCIF
+            tile_1 = Image.fromarray(np.uint8(cm.hsv(tl)*500)) 
+        elif (rb_imtech_val ==2): # CODEX
+             tile_1 = Image.fromarray(np.uint8(cm.jet(tl)*255)) 
 
         old_size = tile_1.size
 
 
-        ##25th jan 2022 below
+      
 
 
         new_size = (old_size[0]+1, old_size[1]+1)
@@ -419,27 +418,27 @@ def generate_stack_montage(chk_box_marker_sm, LABELS_MARKERS):
 
         file_name = os.path.join(path_wd+'/output_tiles/sm_image_tsne_tils'+str(k)+'.png')
 
-        file_name_hover.append('sm_image_tsne_tils'+str(k)+'.png') # 24th jan 2022 file_name) #19th Jan 2022
+        file_name_hover.append('sm_image_tsne_tils'+str(k)+'.png') 
 
-        new_im.save(file_name) #2nd Feb 2021
+        new_im.save(file_name) 
 
         # Read Images 
 
 
         tile_2 = Image.open(file_name)
         rs = max(1, tile_2.width/max_dim, tile_2.height/max_dim)
-        tile_2 = tile_2.resize((int(tile_2.width/rs), int(tile_2.height/rs)), Image.ANTIALIAS) #commented antialias on 9th Feb 2021
+        tile_2 = tile_2.resize((int(tile_2.width/rs), int(tile_2.height/rs)), Image.ANTIALIAS) #commented antialias 
 
         full_image.paste(tile_2, (int((width-max_dim)*ty[k]), int((height-max_dim)*tx[k])),mask=tile_2.convert('RGBA'))
 
     matplotlib.pyplot.figure(figsize = (25,20))
     plt.imshow(full_image)
     plt.axis('off')
-    #return (full_image)
 
 
 
-    ###5th March 2021
+
+
     k = random.randint(2,500)
     file_name = os.path.join(path_wd+'/image_tSNE_GUI/static/sm_image_tsne_tils_all_'+str(k)+'.png')
     full_image.save(file_name)
@@ -452,28 +451,28 @@ def generate_stack_montage(chk_box_marker_sm, LABELS_MARKERS):
 
     rotated_img.save(file_name_rot)
 
-    return([file_name_rot,tsne, file_name_hover]) #19th Jan 2022 (added file_name_hover)     
+    return([file_name_rot,tsne, file_name_hover]) 
         
         
 
-###########################################################
-### generate_image_tSNE() generates the image tSNE based on user inputs
-###
-### a) reads in and pre-processes the images
-### b) generates random points or evenly-spaced points on the static canvas to arrange the images in rows or reads in the user-provided tSNE
-### c) generates thumbnails, and pastes these onto the static canvas
-### d) stores the thumbnails in the output folder
-### e) updates the hover tool with thumbnail paths
-### f) shuffle or no shuffle option is handled in this function where images are randomly shuffled
-### 
-###########################################################    
+###########################################################################################################
+### generate_image_tSNE()                                                                          ######## 
+###                                                                                                ########
+### a) reads in and pre-processes the images                                                       ######## 
+### b) generates random points or evenly-spaced points on the static canvas to arrange the images  ########
+###                      in rows or reads in the user-provided tSNE                                ########
+### c) generates thumbnails based on border choices, pastes the thumbnails onto the static canvas  ########
+### d) stores the thumbnails in the output folder                                                  ########
+### e) updates the hover tool with thumbnail paths                                                 ########
+### f) shuffle or no shuffle option is handled in this function where images are randomly shuffled ########
+###########################################################################################################    
 
-def generate_image_tSNE(chk_box_marker,rb_val,rb_rs_val,rb_shf_val, LABELS_MARKERS):
+def generate_image_tSNE(chk_box_marker,rb_val,rb_rs_val,rb_shf_val, rb_imtech_val, mc, wc, LABELS_MARKERS):
     full_image = Image.new('RGBA', (width, height))
     size = [256,256]
 
-    file_name_hover = [] # 19th Jan 2022
-    file_name_hover_list = [] # 19th Jan 2022
+    file_name_hover = [] 
+    file_name_hover_list = [] 
     
     if (rb_shf_val == 0): # no shuffle option
         #create the random tsne projections
@@ -565,10 +564,9 @@ def generate_image_tSNE(chk_box_marker,rb_val,rb_rs_val,rb_shf_val, LABELS_MARKE
             coords_list = [(ix, iy) for ix in range(nx) for iy in range(ny)]
            
         
-            #logic to get grid points - 29th March 2021
+            #logic to get grid points 
             m = np.int(np.floor(nx*ny/num_images))
-            #print('bbbbb')
-            #print(m)
+       
             
             row_needed = []
             def multiples(m, num_images):
@@ -577,9 +575,8 @@ def generate_image_tSNE(chk_box_marker,rb_val,rb_rs_val,rb_shf_val, LABELS_MARKE
         
             multiples(m,num_images)
             
-            #print('aaaa')
-            #print(num_images)
-            #print(np.array(row_needed).flatten())
+           
+
             select_coords = np.array(coords_list)[np.array(row_needed).flatten()]
             
             print(type(select_coords))
@@ -591,7 +588,7 @@ def generate_image_tSNE(chk_box_marker,rb_val,rb_rs_val,rb_shf_val, LABELS_MARKE
             df_Xtsne.to_csv(os.path.join(path_wd + '/user_inputs/metadata/X_imagetSNE_seeall.csv'), header=None, index=None)
 
             
-        # 26th spril 2021
+    
         # save the tSNE points to bve read later on irrespective of whoch option was chosen
         df_Xtsne_touse = pd.DataFrame(tsne)
         df_Xtsne_touse.to_csv(os.path.join(path_wd + '/user_inputs/metadata/X_imagetSNE_touse.csv'), header=None, index=None)
@@ -602,14 +599,14 @@ def generate_image_tSNE(chk_box_marker,rb_val,rb_rs_val,rb_shf_val, LABELS_MARKE
     
 
         
-        ##identify the markers - 26th March 2021
+        ##identify the markers
         mm = np.asarray(LABELS_MARKERS)[chk_box_marker]
         
         tiles = []
 
 
-        marker_choice = np.array(mc)[chk_box_marker] #31st Jan 2022
-        weight_choice = np.array(wc)[chk_box_marker] #31st Jan 2022
+        marker_choice = np.array(mc)[chk_box_marker] 
+        weight_choice = np.array(wc)[chk_box_marker] 
 
 
         
@@ -619,15 +616,18 @@ def generate_image_tSNE(chk_box_marker,rb_val,rb_rs_val,rb_shf_val, LABELS_MARKE
 
         
         for k in range(len(inds)):
-            #print('KKKKK', k)
+            
             image_all_2 = []
             image_all_1 = []
            
 
             
-            #im = io.imread(marker_image_list[inds[k]])#,plugin='matplotlib') #26th jan 2022
+
             im = tifffile.imread(marker_image_list[inds[k]])
-            #print (im.shape)    
+            if (rb_imtech_val ==2): #for codex
+                im = im.reshape(64,5040,9408) 
+            
+           
             
             for m in range(len(marker_choice)):
                 image = im[marker_choice[m]]
@@ -644,28 +644,32 @@ def generate_image_tSNE(chk_box_marker,rb_val,rb_rs_val,rb_shf_val, LABELS_MARKE
 
 
                 print('thresh is: ', str(thresh))
-                #thresh = 12
+             
                 bw = closing(image > thresh, square(1))
 
                 # remove artifacts connected to image border
                 cleared_imtsne = clear_border(bw)
 
 
-                image_all_1.append(cleared_imtsne*weight_choice[m]) #10
+                image_all_1.append(cleared_imtsne*weight_choice[m]) 
 
             tl = sum(image_all_1)
 
 
 
-            tile_1 = Image.fromarray(np.uint8(cm.viridis(tl)*255))
+            if (rb_imtech_val ==0): #vectra
+                tile_1 = Image.fromarray(np.uint8(cm.viridis(tl)*255))
 
-
+            elif (rb_imtech_val ==1): #t-CyCIF
+                tile_1 = Image.fromarray(np.uint8(cm.jet(tl)*255)) 
+            elif (rb_imtech_val ==2): # CODEX
+                 tile_1 = Image.fromarray(np.uint8(cm.jet(tl)*255)) 
 
 
             old_size = tile_1.size
 
             
-            ##25th jan 2022 below
+            
             
             if(rb_val==0): 
                 new_size = (old_size[0]+1, old_size[1]+1)
@@ -696,28 +700,23 @@ def generate_image_tSNE(chk_box_marker,rb_val,rb_rs_val,rb_shf_val, LABELS_MARKE
 
 
                 new_im = Image.new("RGB", new_size, color_vec_patid[inds[k]])# color='yellow')
-            #25th jan 2022 comment
-            '''            
-            elif(rb_val==0): 
-                new_size = (old_size[0]+1, old_size[1]+1)
-                new_im = Image.new("RGB", new_size,color='black')
-            '''    
+   
             new_im.paste(tile_1, (int((new_size[0]-old_size[0])/2),int((new_size[1]-old_size[1])/2)))
 
 
 
             file_name = os.path.join(path_wd+'/output_tiles/image_tsne_tils'+str(k)+'.png')
 
-            file_name_hover.append('image_tsne_tils'+str(k)+'.png') # 24th jan 2022 file_name) #19th Jan 2022
+            file_name_hover.append('image_tsne_tils'+str(k)+'.png') 
 
-            new_im.save(file_name) #2nd Feb 2021
+            new_im.save(file_name)
 
             # Read Images 
 
 
             tile_2 = Image.open(file_name)
             rs = max(1, tile_2.width/max_dim, tile_2.height/max_dim)
-            tile_2 = tile_2.resize((int(tile_2.width/rs), int(tile_2.height/rs)), Image.ANTIALIAS) #commented antialias on 9th Feb 2021
+            tile_2 = tile_2.resize((int(tile_2.width/rs), int(tile_2.height/rs)), Image.ANTIALIAS) #commented antialias 
 
             full_image.paste(tile_2, (int((width-max_dim)*ty[k]), int((height-max_dim)*tx[k])),mask=tile_2.convert('RGBA'))
 
@@ -726,11 +725,10 @@ def generate_image_tSNE(chk_box_marker,rb_val,rb_rs_val,rb_shf_val, LABELS_MARKE
         matplotlib.pyplot.figure(figsize = (25,20))
         plt.imshow(full_image)
         plt.axis('off')
-        #return (full_image)
 
 
 
-        ###5th March 2021
+  
         k = random.randint(2,500)
         file_name = os.path.join(path_wd+'/image_tSNE_GUI/static/image_tsne_tils_all_'+str(k)+'.png')
         full_image.save(file_name)
@@ -765,7 +763,7 @@ def generate_image_tSNE(chk_box_marker,rb_val,rb_rs_val,rb_shf_val, LABELS_MARKE
         tsne = np.array(df_Xtsne)   
         
         
-        # 26th spril 2021
+    
         # save the tSNE points to be read later on, irrespective of which option was chosen
         df_Xtsne_touse = pd.DataFrame(tsne)
         df_Xtsne_touse.to_csv(os.path.join(path_wd + '/user_inputs/metadata/X_imagetSNE_touse.csv'), header=None, index=None)
@@ -780,55 +778,35 @@ def generate_image_tSNE(chk_box_marker,rb_val,rb_rs_val,rb_shf_val, LABELS_MARKE
         size = [256,256]
 
         
-        ##identify the markers - 26th March 2021
+        ##identify the markers 
         mm = np.asarray(LABELS_MARKERS)[chk_box_marker]
         
         tiles = []
-        '''#28th jan 2022
-        mc = []
-        wc = []
-        
-        if LABELS_MARKERS[0] in mm:
-            mc.append(0)
-            wc.append(800)
-        if LABELS_MARKERS[1] in mm:
-            mc.append(1)
-            wc.append(400)
-        if LABELS_MARKERS[2] in mm:
-            mc.append(2)
-            wc.append(400)
-        if LABELS_MARKERS[3] in mm:
-            mc.append(3)
-            wc.append(100)
-        if LABELS_MARKERS[4] in mm:
-            mc.append(4)
-            wc.append(100)
-        if LABELS_MARKERS[5] in mm:
-            mc.append(5)
-            wc.append(100)
-        '''#28th jan 2022
+
                                 
-        marker_choice = np.array(mc)[chk_box_marker] #31st Jan 2022 #[3,5]
-        weight_choice = np.array(wc)[chk_box_marker] #31st Jan 2022 #[800,100]
+        marker_choice = np.array(mc)[chk_box_marker] 
+        weight_choice = np.array(wc)[chk_box_marker] 
 
         inds = range(len(marker_image_list))
 
         N = len(inds)
         shf_N = np.array(range(N))     
         random.shuffle(shf_N)
-        print("#############$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+        print("#############shuffle file order###")
         print(shf_N)
+        count_file = 0 
         
-        for k in range(N):
-            #print('KKKKK', k)
+        for k in range(N): 
+            
             image_all_2 = []
             image_all_1 = []
            
 
             
-            #im = io.imread(marker_image_list[shf_N[k]])#,plugin='matplotlib') #26th jan 2022
-            im = tifffile.imread(marker_image_list[shf_N[k]])
-            print (im.shape)    
+           
+            im = tifffile.imread(marker_image_list[shf_N[k]]) 
+            if (rb_imtech_val ==2): #for codex
+                im = im.reshape(64,5040,9408) ##
          
             for m in range(len(marker_choice)):
                 image = im[marker_choice[m]]
@@ -851,15 +829,23 @@ def generate_image_tSNE(chk_box_marker,rb_val,rb_rs_val,rb_shf_val, LABELS_MARKE
                 cleared_imtsne = clear_border(bw)
 
 
-                image_all_1.append(cleared_imtsne*weight_choice[m]) #10
+                image_all_1.append(cleared_imtsne*weight_choice[m]) 
 
             tl = sum(image_all_1)
-            tile_1 = Image.fromarray(np.uint8(cm.viridis(tl)*255))
+           
+            
+            if (rb_imtech_val ==0): #vectra
+                tile_1 = Image.fromarray(np.uint8(cm.viridis(tl)*255))
+
+            elif (rb_imtech_val ==1): #t-CyCIF
+                tile_1 = Image.fromarray(np.uint8(cm.jet(tl)*255)) 
+            elif (rb_imtech_val ==2): # CODEX
+                 tile_1 = Image.fromarray(np.uint8(cm.jet(tl)*255)) 
             old_size = tile_1.size
 
             print(pat_ind_list[shf_N[k]])
 
-            # 25th jan 2022
+           
             if(rb_val==0): 
                 new_size = (old_size[0]+1, old_size[1]+1)
                 new_im = Image.new("RGB", new_size,color='black')
@@ -889,46 +875,28 @@ def generate_image_tSNE(chk_box_marker,rb_val,rb_rs_val,rb_shf_val, LABELS_MARKE
 
 
                 new_im = Image.new("RGB", new_size,color_vec_patid[shf_N[k]])# color='yellow')
-            #25th jan 2022 comment
-            '''            
-            elif(rb_val==0): 
-                new_size = (old_size[0]+1, old_size[1]+1)
-                new_im = Image.new("RGB", new_size,color='black')
-            '''    
+
             
-
-            '''
-            if(rb_val==1): # for the border
-                new_size = (old_size[0]+30, old_size[1]+30)
-
-                #new_im = Image.new("RGB", new_size,color='yellow')   ## luckily, this is already black!
-
-                if(resp_list[shf_N[k]] == 'Response 1'):
-                    new_im = Image.new("RGB", new_size,color='yellow')
-                elif(resp_list[shf_N[k]] == 'Response 2'):
-                    new_im = Image.new("RGB", new_size,color='red')
-
-            elif(rb_val==0): 
-                new_size = (old_size[0]+1, old_size[1]+1)
-                new_im = Image.new("RGB", new_size,color='black')
-            '''
+            new_im.paste(tile_1, (int((new_size[0]-old_size[0])/2),int((new_size[1]-old_size[1])/2)))      
             
-            new_im.paste(tile_1, (int((new_size[0]-old_size[0])/2),int((new_size[1]-old_size[1])/2)))                     
+            
+            count_file = np.int(np.array(np.where(shf_N[k]==shf_N)).flatten()) 
                                 
-            file_name = os.path.join(path_wd+'/output_tiles/image_tsne_tils'+str(k)+'.png') #19th Jan 2022 (changed the indexing)
+            file_name = os.path.join(path_wd+'/output_tiles/image_tsne_tils'+str(shf_N[k])+'.png') 
 
-            file_name_hover.append('image_tsne_tils'+str(k)+'.png') # 24th jan 2022 #19th Jan 2022
+            file_name_hover.append('image_tsne_tils'+str(shf_N[k])+'.png') 
             
-            #plt.imsave(file_name,tile_1)
-            new_im.save(file_name) #2nd Feb 2021
+            
+            new_im.save(file_name) 
 
-
+            
+            
             # Read Images 
 
 
             tile_2 = Image.open(file_name)
             rs = max(1, tile_2.width/max_dim, tile_2.height/max_dim)
-            tile_2 = tile_2.resize((int(tile_2.width/rs), int(tile_2.height/rs)), Image.ANTIALIAS) #commented antialias on 9th Feb 2021
+            tile_2 = tile_2.resize((int(tile_2.width/rs), int(tile_2.height/rs)), Image.ANTIALIAS) #commented antialias 
 
 
             full_image.paste(tile_2, (int((width-max_dim)*ty[shf_N[k]]), int((height-max_dim)*tx[shf_N[k]])),mask=tile_2.convert('RGBA'))
@@ -937,19 +905,24 @@ def generate_image_tSNE(chk_box_marker,rb_val,rb_rs_val,rb_shf_val, LABELS_MARKE
         matplotlib.pyplot.figure(figsize = (25,20))
         plt.imshow(full_image)
         plt.axis('off')
-        #return (full_image)
-
-
-
-        ###5th March 2021
-        k1 = random.randint(2,500) #19th Jan 2022 (k to k1)
-        file_name = os.path.join(path_wd+'/image_tSNE_GUI/static/image_tsne_tils_all_'+str(k1)+'.png') #19th Jan 2022 (k to k1)
+    
+    
+       
+        ## order filenamehover list before sending it out to the live panels
+        so = np.argsort(shf_N)
+        file_name_hover_np = np.array(file_name_hover)
+        sorted_file_name_hover = file_name_hover_np[so]
+        file_name_hover = sorted_file_name_hover.tolist()
+        
+        
+        k1 = random.randint(2,500) 
+        file_name = os.path.join(path_wd+'/image_tSNE_GUI/static/image_tsne_tils_all_'+str(k1)+'.png') 
 
         full_image.save(file_name)
       
 
         rotated_img     = full_image.rotate(90)
-        file_name_rot = file_name = os.path.join(path_wd+'/image_tSNE_GUI/static/image_tsne_tils_all_'+str(k1)+'_rot.png') #19th Jan 2022 (k to k1)
+        file_name_rot = file_name = os.path.join(path_wd+'/image_tSNE_GUI/static/image_tsne_tils_all_'+str(k1)+'_rot.png') 
        
 
 
@@ -962,18 +935,18 @@ def generate_image_tSNE(chk_box_marker,rb_val,rb_rs_val,rb_shf_val, LABELS_MARKE
                                 
                                 
                                 
-    return([file_name_rot,tsne, file_name_hover]) #19th Jan 2022 (added file_name_hover)
+    return([file_name_rot,tsne, file_name_hover]) 
 
 
-###########################################################
-### button_callback()
-### a) Calls the create_figure() that collects user inputs from the GUI
-### b) draw_tSNE_scatter() generates the tSNE plots for the live canvases
-### b) reads in the user-provided tSNE
-### c) generates thumbnails, and pastes these onto the static canvas
-### d) stores the thumbnails in the output folder
-### e) updates the hover tool with thumbnail paths
-###########################################################  
+###############################################################################
+### button_callback()                                                      ####        
+### a) Calls the create_figure() that collects user inputs from the GUI    ####
+### b) draw_tSNE_scatter() generates the tSNE plots for the live canvases  ####
+### b) reads in the user-provided tSNE                                     ####
+### c) generates thumbnails, and pastes these onto the static canvas       ####
+### d) stores the thumbnails in the output folder                          ####
+### e) updates the hover tool with thumbnail paths                         ####
+###############################################################################  
 
 
 def button_callback():
@@ -986,7 +959,7 @@ def button_callback():
     elif(theme_t == 'dark blue'):
         curdoc().theme= theme_blue
         
-    jk = create_figure()
+    jk = create_figure(stack_montage_flag)
     layout.children[1] = jk[0]
     
     print('############')
@@ -995,40 +968,56 @@ def button_callback():
     print(type(tsne3))
     print(tsne3)
     
-    #19th Jan 2022
-    file_name_hover = jk[2]
-    print('############')
-    print(type(file_name_hover))
-    print(file_name_hover)
 
-    p1_out = draw_tSNE_scatter(tsne3, file_name_hover) #19th Jan 2022 (added file_name_hover)
+    file_name_hover = jk[2]
+    print('############fnh in button callback')
+    print('file_name_hover')
+    print(file_name_hover)
+    
+
+ 
+    markers_single = jk[3]
+    print('############')
+    print(type(markers_single))
+    print(markers_single)
+
+    cluster_ms_list = jk[4]
+    print('############')
+    print(type(cluster_ms_list ))
+    print(cluster_ms_list )
+
+    p1_out = draw_tSNE_scatter(tsne3, file_name_hover, cluster_ms_list) 
     p1 = p1_out[0]
     p2 = p1_out[1]
     p3 = p1_out[2]
-    p4 = p1_out[3] #19th Jan 2022
-    #layout.children[2] = p1
-    source = p1_out[4] #19th jan 2022 (added 4)
+    p4 = p1_out[3] 
+   
+    source = p1_out[4] 
     
     tab1 = Panel(child=p1, title="Response")
     tab2 = Panel(child=p2, title="Treatment")
     tab3 = Panel(child=p3, title="Cluster Annotations")
-    tab4 = Panel(child=p4, title="Patient id") #19th Jan 2022
+    tab4 = Panel(child=p4, title="Patient id") 
 
-    tabs = Tabs(tabs=[ tab1, tab2, tab3, tab4 ]) #19th Jan 2022 (added tab4)
+    tabs = Tabs(tabs=[ tab1, tab2, tab3, tab4 ]) 
     layout.children[2] = tabs
     
     return([p,p1,p2,p3,p4,source,tabs]) 
 
 
-###########################################################
-### create_figure() collects the user choices from the GUI and calls either the generate_stack_montage() for reading in a single image or the generate_image_tSNE() for multiplexed images 
-###########################################################  
+############################################################################
+### create_figure() collects the user choices from the GUI and          ####
+### calls either the generate_stack_montage() for reading in            ####
+### a single image or the generate_image_tSNE() for multiplexed images  ####
+############################################################################
 
 
 
-def create_figure():
+def create_figure(stack_montage_flag):
    
     p = figure(tools=TOOLS,x_range=x_range, y_range=y_range,width=1000,height=1000)
+    
+    rb_imtech = radio_button_group_imtech.value
     
     rb = radio_button_group.value
     
@@ -1040,18 +1029,11 @@ def create_figure():
     
     print(chk_box_marker)
     
-    chk_box_marker_sm = checkbox_group_sm.active #26th jan 2022
-    print('**chk_box_marker_sm**')  #26th jan 2022
-    print(chk_box_marker_sm)  #26th jan 2022
+    chk_box_marker_sm = checkbox_group_sm.active 
+    print('**chk_box_marker_sm**')  
+    print(chk_box_marker_sm)  
 
-    #25th jan 2022
-    '''
-    if(rb=='Yes'):
-        rb_val = 1
-    else:
-        rb_val = 0
-    '''
-    #25th jan 2022
+
     if(rb=='No'):
         rb_val = 0
     elif(rb=='Based on Response'):
@@ -1062,7 +1044,7 @@ def create_figure():
         rb_val = 3
     elif(rb=='Based on Patient id'):
         rb_val = 4
-    ###########
+
          
     
     if(rb_rs=='Generate new co-ordinates'):
@@ -1077,32 +1059,125 @@ def create_figure():
         rb_shf_val = 1
     else:
         rb_shf_val = 0
+        
+    
+    
+    if (rb_imtech == 'Vectra'):
+        rb_imtech_val = 0
+    elif (rb_imtech=='t-CyCIF'):
+        rb_imtech_val = 1
+    elif (rb_imtech=='CODEX'):
+        rb_imtech_val = 2
+        
+   
+    ## adding in the codex, vectra, tcycif options
+    # collecting the marker names for tcycif/codex stack montage
+
+    cluster_ms_list = ['nil'] * len(LABELS_MARKERS)#[]
+    clust_ms_list = []
+    clust_ms_list_1 = pd.read_csv(os.path.join(path_wd + '/user_inputs/metadata/markers.csv'),
+                                         header= 0,index_col=None)
+    markers_single = np.array(clust_ms_list_1.iloc[:,2]).flatten()
+
+
+    ## need to update the markers_single array based on the order the files are read in 
+    if (stack_montage_flag==True):
+        if (rb_imtech_val ==1): #SM for t-CyCIF data
+            print('in SM for t-CyCIF')
+            ms_list=[]
+            cluster_ms_list = []
+            for i in range(markers_single.shape[0]):
+                print(i)
+                print(pat_fov_list[i])
+                print(markers_single)
+                channel_num = np.int(pat_fov_list[i].split("_40X_")[1].split(".tiff")[0])
+                ms_list.append(markers_single[channel_num-1])
+
+
+            markers_single = np.copy(np.array(ms_list))
+
+
+
+            # use this updated markers_single name order going forward
+            for i in range(markers_single.shape[0]):
+
+                cluster_ms_list.append('Channel '+ markers_single[i]) 
+
+        elif (rb_imtech_val ==2): #SM for CODEX
+            ## for codex sm for tonsils
+            print('in SM for CODEX')
+            ## need to update the markers_single array based on the order the files are read in 
+            ms_list=[]
+            cluster_ms_list = []
+            for i in range(markers_single.shape[0]):
+                print(i)
+                print(pat_fov_list[i])
+               
+                channel_name = pat_fov_list[i].split('.tif')[0].split('_')[3]
+                channel_num = np.int(np.array(np.where(channel_name==markers_single)).flatten())
+                ms_list.append(markers_single[channel_num])
+
+            markers_single = np.copy(np.array(ms_list))
             
 
-    if(len(chk_box_marker_sm)==0): #so we are using the multiple multiplexed option #26th jan 2022
+            # use this updated markers_single name order going forward
+            for i in range(markers_single.shape[0]):
+
+                cluster_ms_list.append('Channel '+ markers_single[i])        
+                
+                
+    elif (stack_montage_flag == False): 
+
+
+        # to handle all markers in t-CyCIF/CODEX/Vectra
+
+        mc = []
+        for m in range(len(LABELS_MARKERS)):
+            in_mc = np.int(np.array(np.where(LABELS_MARKERS[m] == np.array(markers_single))).flatten())
+            mc.append(in_mc)
+            
+        if (rb_imtech_val ==0):#Vectra
+            wc = [100] * len(LABELS_MARKERS)      
+            wc[0] = 800
+            wc[1]=wc[2] = 400
+        elif (rb_imtech_val ==1):#t-CyCIF
+            wc = [100] * len(LABELS_MARKERS)      
+            wc[0] = 50
+        elif (rb_imtech_val ==2):
+            wc = [150] * len(LABELS_MARKERS)      
+            wc[0] = 300 #
+            wc[6] = 100
+            
+            
+            
+        
+    ###########
+            
+
+    if(len(chk_box_marker_sm)==0): #so we are using the multiple multiplexed option 
         if(len(chk_box_marker)==0): #if no markers are chosen, display defaults
-            #file_name_1 = os.path.join(path_wd+'/user_inputs/image_tsne_tils_all_1_rot.png')#"image_tSNE_GUI/static/image_tsne_tils_all.png"
+
             file_name_1 = "image_tSNE_GUI/static/image_tsne_tils_all.png"
             p.image_url(url=[file_name_1], x=x_range[0],y=y_range[1],w=x_range[1]-x_range[0],h=y_range[1]-y_range[0])
             df_Xtsne = pd.read_csv(os.path.join(path_wd + '/user_inputs/metadata/X_imagetSNE.csv'), index_col=None, header= None)
             df_Xtsne.shape
             tsne_points = np.array(df_Xtsne )
-            file_name_hover = list(range(num_images)) #19th Jan 2022
+            file_name_hover = list(range(num_images)) 
 
         else:
 
 
-            out1 = generate_image_tSNE(chk_box_marker, rb_val,rb_rs_val,rb_shf_val,LABELS_MARKERS)
+            out1 = generate_image_tSNE(chk_box_marker, rb_val,rb_rs_val,rb_shf_val,rb_imtech_val, mc, wc, LABELS_MARKERS) 
             file_name_all = out1[0]
             tsne_points = out1[1]
-            file_name_hover = out1[2] #19th jan 2022
+            file_name_hover = out1[2] 
 
-
+            print('file_name_hover after gen_image_tsne')
+            print(file_name_hover)
 
             print('#########file_name_all########') 
             print('#################')  
-            print('#################') 
-            print('#################') 
+
             print(file_name_all)
 
             file_name_1 = file_name_all.split('/code')[1]
@@ -1112,19 +1187,20 @@ def create_figure():
 
             p.image_url(url=[file_name_1], x=x_range[0],y=y_range[1],w=x_range[1]-x_range[0],h=y_range[1]-y_range[0])
 
-    elif(len(chk_box_marker_sm)==1): #26th jan 2022 #stack montage option 
+    elif(len(chk_box_marker_sm)==1):  #stack montage option 
         print('chosen stack montage')
-        out1sm = generate_stack_montage(chk_box_marker, LABELS_MARKERS)
+        out1sm = generate_stack_montage(chk_box_marker, rb_imtech_val, LABELS_MARKERS)
         file_name_all = out1sm[0]
         tsne_points = out1sm[1]
-        file_name_hover = out1sm[2] #19th jan 2022
+        file_name_hover = out1sm[2] 
 
-
+        print('############fnh post sm')
+        print('file_name_hover')
+        print(file_name_hover)
 
         print('#########file_name_all########') 
         print('#################')  
-        print('#################') 
-        print('#################') 
+
         print(file_name_all)
 
         file_name_1 = file_name_all.split('/code')[1]
@@ -1135,7 +1211,7 @@ def create_figure():
         p.image_url(url=[file_name_1], x=x_range[0],y=y_range[1],w=x_range[1]-x_range[0],h=y_range[1]-y_range[0])
 
             
-    return ([p,tsne_points, file_name_hover]) #19th jan 2022 (added file_name_hover)
+    return ([p,tsne_points, file_name_hover,markers_single, cluster_ms_list]) 
 
 
 ##########
@@ -1152,34 +1228,26 @@ colours_58 = ["firebrick","gold","royalblue","green","dimgray","orchid","darkvio
 colours_resp = ["yellow","red","green"]
 colours_tx = ["orange","limegreen","violet"]
 
-##########
 
-##################################
-#### Section that gets populated #
-####based on User uploads ########
-##################################
-##################################
-## This section reads in images, 
-## metadata, markers in the data,
-## and user choices
-#############################
-#############################
+#####################################
+#### Section that gets populated ####
+####based on User uploads ###########
+#####################################
+#####################################
+## This section reads in images, ####
+## metadata, markers in the data,####
+## and user choices              ####
+#####################################
+#####################################
 
 
 path_wd = os.getcwd()
+print('Current working directory: ')
 print(path_wd)
 
-'''7th Feb 2022
-# read in tSNE co-ordinates 
-df_Xtsne = pd.read_csv(os.path.join(path_wd + '/user_inputs/metadata/X_imagetSNE.csv'), index_col=None, header= None)
-tsne = np.array(df_Xtsne )
-tx, ty = tsne[:,0], tsne[:,1]
-tx = (tx-np.min(tx)) / (np.max(tx) - np.min(tx))
-ty = (ty-np.min(ty)) / (np.max(ty) - np.min(ty))
-num_images = tsne.shape[0]
-'''
 
-### 7th Feb 2022
+
+
 ### to generate tsne points from the onset itself
 
 fname = os.path.join(path_wd + '/user_inputs/metadata/X_imagetSNE.csv')
@@ -1265,16 +1333,7 @@ else:
     
     ########################
 
-# read in the markers
-'''7th Feb 2022
-df_markers = pd.read_csv(os.path.join(path_wd + '/user_inputs/metadata/Marker_ids.csv'), index_col=None, header= None)
-markers_list = np.array(df_markers ).flatten()
-LABELS_MARKERS = []
-for j in range(markers_list.shape[0]):
-    LABELS_MARKERS.append(markers_list[j]) 
-'''
 
-# 7TH FEB 2022
 
 # adding this for reading in data if no marker info is present
 fname = os.path.join(path_wd + '/user_inputs/metadata/Marker_ids.csv')
@@ -1296,33 +1355,31 @@ else:
 marker_image_list = []
 pat_fov_list = []
 FoV_path = os.path.join(path_wd + '/user_inputs/figures/')
-file_order = [] #8th Feb 2022
+file_order = [] 
 
-for fname in os.listdir(FoV_path):
+#sorted input
+for fname in sorted(os.listdir(FoV_path)):
     print(fname)
     marker_image_list.append(FoV_path+fname)
     pat_fov_list.append(fname)
-    file_order.append(np.int(fname.split('_')[1].split('.tif')[0]))
+   
     
 
-print("whjgefkuwyef j,wf")
+print("print image list")
 print(marker_image_list)
+print("file order")
 print(file_order)
-print("srdfsdf")
 
 
-
-#for i in range(num_images):
-#  file_ord.append(np.int(np.array(np.where(fs2_list[i]==np.array(ff_list))).flatten()))
 
 
 #################################
 #################################
-#check for user metadata inputs
-# if these files are not present, gray them out. 
+# checks for user metadata inputs
+# if these files are not present, gray out the tSNE or points. 
 
 # collecting the response metadata
-# 24th jan 2022
+
 
 color_vec = []
 resp_list= []
@@ -1334,10 +1391,9 @@ if os.path.isfile(fname):
 
     for i in range(resp_list_1.shape[0]):
         row_t = np.int(np.array(np.where(resp_list_1[i]==uni_resp)).flatten())
-        #if resp_list_1[i]=='Response 1':
+        
         color_vec.append(colours_resp[row_t])
-        #elif resp_list_1[i]=='Response 2':
-        #    color_vec.append('red')
+
         resp_list.append(resp_list_1[i])
 else:
     for i in range(num_images):
@@ -1346,7 +1402,7 @@ else:
         
         
 # collecting the treatment metadata
-# 24th jan 2022
+
 color_vec_tx = []
 tx_list = []
 fname = os.path.join(path_wd + '/user_inputs/metadata/Treatment_categories.csv')
@@ -1356,12 +1412,9 @@ if os.path.isfile(fname):
     uni_tx,counts_tx = np.unique(tx_list_1,return_counts=True)
     for i in range(tx_list_1.shape[0]):
         row_t = np.int(np.array(np.where(tx_list_1[i]==uni_tx)).flatten())
-        #if resp_list_1[i]=='Response 1':
+     
         color_vec_tx.append(colours_tx[row_t])
-        #if tx_list_1[i]=='Treatment 1':
-        #    color_vec_tx.append('orange')
-        #elif tx_list_1[i]=='Treatment 2':
-        #    color_vec_tx.append('limegreen')
+
         tx_list.append(tx_list_1[i])
 else:
     for i in range(num_images):
@@ -1370,7 +1423,7 @@ else:
 
 
 # collecting the cluster assignments metadata
-# 24th jan 2022
+
 fname = os.path.join(path_wd + '/user_inputs/metadata/Cluster_categories.csv')
 color_vec_clasgn = []
 cluster_anno_list = []
@@ -1394,7 +1447,7 @@ else:
      
 
 # collecting the patient id metadata    
-# 24th jan 2022
+
 fname = os.path.join(path_wd + '/user_inputs/metadata/Patient_ids.csv')
 color_vec_patid = []
 cluster_pat_list = []
@@ -1402,7 +1455,7 @@ clust_patid_list = []
 
 if os.path.isfile(fname):
     
-    # 19th Jan 2022        
+      
     # collecting the Patient id metadata
 
     clust_patid_list_1 = np.array(pd.read_csv(fname,header= None,index_col=None)).flatten()
@@ -1421,9 +1474,7 @@ else:
         clust_patid_list.append('nil')
         cluster_pat_list.append('Patient nil')
         pat_ind_list.append('nil')
-        
-
-# 19th Jan 2022        
+     
 # generate dummy thumbnail names for hover panel
 
 file_name_hover = []
@@ -1434,75 +1485,20 @@ for i in range(num_images): #clust_patid_list_1.shape[0]):
     file_name_hover.append(str(i))
     file_name_hover_list.append('Thumbnail '+ str(i))  
 
- 
-# 20th Jan 2022        
-# collecting the marker names for tcycif single
-#color_ms_patid = []
-cluster_ms_list = ['nil'] * len(LABELS_MARKERS)#[]
-clust_ms_list = []
-clust_ms_list_1 = pd.read_csv(os.path.join(path_wd + '/user_inputs/metadata/markers.csv'),
-                                         header= 0,index_col=None)
-markers_single = np.array(clust_ms_list_1.iloc[:,2]).flatten()
-
-
-#31st Jan 2022
-###############
-#uncomment for single montage
-###############
-if (stack_montage_flag==True):
-    ## need to update the markers_single array based on the order the files are read in 
-    ms_list=[]
-    cluster_ms_list = []
-    for i in range(markers_single.shape[0]):
-        print(i)
-        print(pat_fov_list[i])
-        channel_num = np.int(pat_fov_list[i].split("_40X_")[1].split(".tiff")[0])
-        ms_list.append(markers_single[channel_num-1])
-
-    markers_single = np.copy(np.array(ms_list))
-    ###
-
-    # use this updated markers_single name order going forward
-    for i in range(markers_single.shape[0]):
-
-        #color_vec_patid.append(colours_58[clust_patid_list_1[i]]) 
-        clust_ms_list.append(markers_single[i])
-        cluster_ms_list.append('Channel '+ markers_single[i]) 
-
-elif (stack_montage_flag == False): 
-    ###############
-    ###############
-    #1st Feb 2022
-    ###############
-    #uncomment for tcycif/vectra
-    ###############
-    
-
-    ## 28th Jan 2022
-    # to handle all markers in t-CyCIF
-
-    mc = []
-    for m in range(len(LABELS_MARKERS)):
-        in_mc = np.int(np.array(np.where(LABELS_MARKERS[m] == np.array(markers_single))).flatten())
-        mc.append(in_mc)
-    wc = [100] * len(LABELS_MARKERS)      
-    wc[0] = 50
 
     
-    
 
 
-
-
-#########
+#################
 # set up widgets
-#########
+#################
 
-RB_1 = ['Based on Response', 'Based on Treatment','Based on Clusters','Based on Patient id','No'] #25th Jan 2022
-
+RB_1 = ['Based on Response', 'Based on Treatment','Based on Clusters','Based on Patient id','No'] 
 RB_2 = ['Generate new co-ordinates', 'Use pre-defined co-ordinates', 'Arrange in rows']
 
 RB_3 = ['Yes', 'No']
+
+RB_4 = ['Vectra', 't-CyCIF', 'CODEX']
 
 TS_1 = ['black','gray', 'dark blue']
 
@@ -1620,7 +1616,6 @@ theme_blue = Theme(json={
 #########
 
 
-## 8th March 2021
 TOOLS="hover,pan,crosshair,wheel_zoom,zoom_in,zoom_out,box_zoom,undo,redo,reset,tap,save,box_select,poly_select,lasso_select,"
 
 
@@ -1629,10 +1624,10 @@ TOOLTIPS = [
         ("(x,y)", "($x, $y)"),
         ("Pat_id", "@pat_list"),
         ("Response", "@res_list"),
-        ("Treatment", "@tx_list"), #19th Jan 2022
-        ("Cluster id", "@clust_asgn_list"), #19th Jan 2022
-        ("Channel", "@cluster_ms_list"), #20th jan 2022
-        ("Thumbnail", "@file_name_hover_list"), #19th Jan 2022
+        ("Treatment", "@tx_list"), 
+        ("Cluster id", "@clust_asgn_list"), 
+        ("Channel", "@cluster_ms_list"), 
+        ("Thumbnail", "@file_name_hover_list"), 
         ("FoV","@fov_list")
     ]
     
@@ -1642,18 +1637,25 @@ p1 = figure(plot_width=400, plot_height=400, tooltips=TOOLTIPS,tools = TOOLS,
 
 
 
-####################################################################################
-## This block prepares and sets up the GUI layout, and collects user-input choices##
-####################################################################################
+#####################################################################################
+## This block prepares and sets up the GUI layout, and collects user-input choices ##
+#####################################################################################
 
 
 desc = Div(text=open(os.path.join(path_wd + '/image_tSNE_GUI/desc.html')).read(), sizing_mode="stretch_width")
 
-desc_SM1 = Div(text=open(os.path.join(path_wd + '/image_tSNE_GUI/descSM1.html')).read(), sizing_mode="stretch_width") #26th jan 2022
 
-desc_SM = Div(text=open(os.path.join(path_wd + '/image_tSNE_GUI/descMontage.html')).read(), sizing_mode="stretch_width") #26th jan 2022
+desc_SM1 = Div(text=open(os.path.join(path_wd + '/image_tSNE_GUI/descSM1.html')).read(), sizing_mode="stretch_width") 
+
+desc_SM = Div(text=open(os.path.join(path_wd + '/image_tSNE_GUI/descMontage.html')).read(), sizing_mode="stretch_width") 
               
-desc_MM = Div(text=open(os.path.join(path_wd + '/image_tSNE_GUI/descMarker.html')).read(), sizing_mode="stretch_width") #3rd Feb 2022
+
+
+radio_button_group_imtech = Select(value='Vectra',
+                          title='',
+                          width=200,
+                          options=RB_4)
+
 
 radio_button_group = Select(value='No',
                           title='Image border',
@@ -1684,19 +1686,18 @@ button = Button(label='Run', width=100, button_type="success")
 ## added to activate Run button
 button.on_click(button_callback)
 
-##26th jan 2022
 ## for stack montage
 SM = ['Stack montage']
 checkbox_group_sm = CheckboxGroup(labels=SM)
 
 
-print('########### new p1#')
+print('updating new p1#')
 
 
 
 # set up layout and GUI refresh after every 'Run' click
 
-out2 = create_figure()
+out2 = create_figure(stack_montage_flag)
 print(out2)
 p = out2[0]
 tsne2 = out2[1]
@@ -1704,28 +1705,40 @@ print('############')
 print(type(tsne2))
 print(tsne2)
 
-#19th Jan 2022
 file_name_hover = out2[2]
-print('############')
+print('############fnh after create figure')
 print(type(file_name_hover))
 print(file_name_hover)
 
-p11_out = draw_tSNE_scatter(tsne2, file_name_hover) #19th Jan 2022 (added file_name_hover)
+
+markers_single = out2[3]
+print('############')
+print(type(markers_single))
+print(markers_single)
+
+cluster_ms_list = out2[4]
+print('############')
+print(type(cluster_ms_list ))
+print(cluster_ms_list )
+
+
+p11_out = draw_tSNE_scatter(tsne2, file_name_hover,cluster_ms_list ) 
+
 p1 = p11_out[0]
 p2 = p11_out[1]
 p3 = p11_out[2]
-p4 = p11_out[3] #19th Jan 2022
+p4 = p11_out[3] 
 
 tab1 = Panel(child=p1, title="Response")
 tab2 = Panel(child=p2, title="Treatment")
 tab3 = Panel(child=p3, title="Cluster Annotations")
-tab4 = Panel(child=p4, title="Patient id") #19th Jan 2022
+tab4 = Panel(child=p4, title="Patient id") 
 
-tabs = Tabs(tabs=[ tab1, tab2, tab3, tab4 ]) #19th Jan 2022 (added tab4)
+tabs = Tabs(tabs=[ tab1, tab2, tab3, tab4 ]) # (added tab4)
 
-#layout1 = row(checkbox_group_sm, desc_SM) #26th jan 2022
 
-selects = column(desc, desc_SM1, checkbox_group_sm,  desc_SM, desc_MM, checkbox_group,  radio_button_group, radio_button_group_RS, radio_button_group_Shf,  theme_select, button, width=520) # was 420 #26th jan 2022, #3rd Feb 2022 (added the MM)
+
+selects = column(desc,  radio_button_group_imtech, desc_SM1, checkbox_group_sm,  desc_SM,  checkbox_group,  radio_button_group, radio_button_group_RS, radio_button_group_Shf,  theme_select, button, width=520) # 
 
 layout=row(selects,p, tabs)#,selected_points)#create_figure())
 
