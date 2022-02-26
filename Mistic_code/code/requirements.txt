@@ -26,3 +26,7 @@ sklearn==0.0
 statsmodels==0.10.1
 stdlib-list==0.8.0
 utils==1.0.1
+napari==0.4.12
+Pillow==6.2.0
+tifffile==2020.10.1
+tifftools==1.2.9
