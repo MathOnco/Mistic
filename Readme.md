@@ -33,7 +33,7 @@ Figure description: A sample Mistic GUI with user inputs is shown. **A.** User-i
 * Open a command prompt (or the Terminal application) to download ``` pip ```. Type: 
   * ``` curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py ```
   * ``` python3 get-pip.py ``` and wait for the installation to complete
-  * Verify the ``` pip ``` installation by typing ``` python3 get-pip.py ```
+  * Verify the ``` pip ``` installation by typing ``` pip --version ```
 
 ## Run the application
 
