@@ -44,6 +44,7 @@ Figure description: A sample Mistic GUI with user inputs is shown. **A.** User-i
 * In the Mistic folder, navigate to /user_inputs folder to upload input files:
   * ```Mistic_code/code/user_inputs/```
   * Use the /figures folder to upload the multiplexed images
+     * Note that the /figures folder should not have any .txt or files such as .DS_Store. It should only contain the multiplexed images
   * Use the /metadata folder to 
     * Upload the imaging markers of interest as Markers_ids.csv and markers.csv. 
        * Example files are provided in the metadata folder
@@ -57,7 +58,8 @@ Figure description: A sample Mistic GUI with user inputs is shown. **A.** User-i
         * Treatments as Treatment_catgories.csv
         * Patient response as Response_categories.csv 
         * If any of these are unavailable, Mistic will use either the randomly-generated or user-provided tSNE points without any color coding i.e. dots are colored in gray.
-    * Sample metadata files are provided for reference in the /metadata folder
+    * Sample metadata files are provided for reference in separate folders for each imaging technique in the /metadata folder
+    * If using the sample metadata, move the files from the specific folder into the /metadata folder
 
 * The main application is located in the /image_tSNE_GUI folder:
   * ```Mistic_code/code/image_tSNE_GUI/```
