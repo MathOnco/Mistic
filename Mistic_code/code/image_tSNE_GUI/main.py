@@ -17,8 +17,11 @@
 ### adding codex, tcycif, vectra option 
 ### prior version is main_rollback_1
 ### 20th Feb 2022
-### code cleanup for github upload
+### code cleanup for github upload (v.1.0.2)
 
+### 14th Mar 2022
+### added the user tsne as well 'arrange in rows' tsne generation code 
+### code cleanup for github upload (v.1.0.3)
 
 
 import os
@@ -475,6 +478,22 @@ def generate_image_tSNE(chk_box_marker,rb_val,rb_rs_val,rb_shf_val, rb_imtech_va
     file_name_hover_list = [] 
     
     if (rb_shf_val == 0): # no shuffle option
+
+        
+        if(rb_rs_val==1):
+            df_Xtsne = pd.read_csv(os.path.join(path_wd + '/user_inputs/metadata/X_imagetSNE_user.csv'), index_col=None, header= None)
+            print('usertsne')
+        elif(rb_rs_val==0):
+            df_Xtsne = pd.read_csv(os.path.join(path_wd + '/user_inputs/metadata/X_imagetSNE.csv'), index_col=None, header= None)
+            print('origtsne')
+            
+        elif(rb_rs_val==2):
+            df_Xtsne = pd.read_csv(os.path.join(path_wd + '/user_inputs/metadata/X_imagetSNE_seeall.csv'), index_col=None, header= None)
+            print('seealltsne')
+            
+        tsne = np.array(df_Xtsne)   
+        
+        '''
         #create the random tsne projections
         if (rb_rs_val==1):
             # Choose up to k points around each reference point as candidates for a new
@@ -588,7 +607,7 @@ def generate_image_tSNE(chk_box_marker,rb_val,rb_rs_val,rb_shf_val, rb_imtech_va
             df_Xtsne.to_csv(os.path.join(path_wd + '/user_inputs/metadata/X_imagetSNE_seeall.csv'), header=None, index=None)
 
             
-    
+        '''
         # save the tSNE points to bve read later on irrespective of whoch option was chosen
         df_Xtsne_touse = pd.DataFrame(tsne)
         df_Xtsne_touse.to_csv(os.path.join(path_wd + '/user_inputs/metadata/X_imagetSNE_touse.csv'), header=None, index=None)
@@ -1258,6 +1277,114 @@ if os.path.isfile(fname):
     tx = (tx-np.min(tx)) / (np.max(tx) - np.min(tx))
     ty = (ty-np.min(ty)) / (np.max(ty) - np.min(ty))
     num_images = tsne.shape[0]
+    
+    
+    
+    ## to have the arrange_in_rows and random points already available
+    # Choose up to k points around each reference point as candidates for a new
+    # sample point
+    k = 10
+
+    # Minimum distance between samples
+    r = 1.7
+
+    width_1, height_1 = 20, 22
+
+    print('Generating random co-ordinates')
+
+    # Cell side length
+    a = r/np.sqrt(2)
+    # Number of cells in the x- and y-directions of the grid
+    nx, ny = int(width_1 / a) + 1, int(height_1 / a) + 1
+
+    # A list of coordinates in the grid of cells
+    coords_list = [(ix, iy) for ix in range(nx) for iy in range(ny)]
+    # Initilalize the dictionary of cells: each key is a cell's coordinates, the
+    # corresponding value is the index of that cell's point's coordinates in the
+    # samples list (or None if the cell is empty).
+    cells = {coords: None for coords in coords_list}
+
+
+
+    # Pick a random point to start with.
+    pt = (np.random.uniform(0, width_1), np.random.uniform(0, height_1))
+    samples = [pt]
+    # Our first sample is indexed at 0 in the samples list...
+    cells[get_cell_coords(pt,a)] = 0
+    # ... and it is active, in the sense that we're going to look for more points
+    # in its neighbourhood.
+    active = [0]
+
+    nsamples = 1
+    # As long as there are points in the active list, keep trying to find samples.
+    while (nsamples < num_images): #active:
+        # choose a random "reference" point from the active list.
+        idx = np.random.choice(active)
+        refpt = samples[idx]
+        # Try to pick a new point relative to the reference point.
+        pt = get_point(k, refpt,r,a,nx,ny,cells,samples)
+        if pt:
+            # Point pt is valid: add it to the samples list and mark it as active
+            samples.append(pt)
+            nsamples += 1
+            active.append(len(samples)-1)
+            cells[get_cell_coords(pt,a)] = len(samples) - 1
+            print('nsamples is: ',str(nsamples))
+        else:
+            # We had to give up looking for valid points near refpt, so remove it
+            # from the list of "active" points.
+            active.remove(idx)
+
+    tsne = np.asarray(samples)
+    tx, ty = tsne[:,0], tsne[:,1]
+    tx = (tx-np.min(tx)) / (np.max(tx) - np.min(tx))
+    ty = (ty-np.min(ty)) / (np.max(ty) - np.min(ty))  
+
+    df_Xtsne_m = pd.DataFrame(tsne)
+    #df_Xtsne_m.to_csv(os.path.join(path_wd + '/user_inputs/metadata/X_imagetSNE.csv'), header=None, index=None)
+    df_Xtsne_m.to_csv(os.path.join(path_wd + '/user_inputs/metadata/X_imagetSNE_user.csv'), header=None, index=None) #14th march 2022
+   
+  
+    ##### for 'arrange in rows' option at the onset itself
+
+
+    # Minimum distance between samples
+    r = 2
+
+    width_1, height_1 = 20, 22
+
+    print('Arrange images side-by-side')
+
+    # Cell side length
+    a = r/np.sqrt(2)
+    # Number of cells in the x- and y-directions of the grid
+    nx, ny = int(width_1 / a) + 1, int(height_1 / a) + 1
+
+    # A list of coordinates in the grid of cells
+    coords_list = [(ix, iy) for ix in range(nx) for iy in range(ny)]
+
+
+    #logic to get grid points - 29th March 2021
+    m = np.int(np.floor(nx*ny/num_images))
+
+
+    row_needed = []
+    def multiples(m, num_images):
+        for i in range(num_images):
+            row_needed.append(i*m)
+
+    multiples(m,num_images)
+
+
+    select_coords = np.array(coords_list)[np.array(row_needed).flatten()]
+
+    print(type(select_coords))
+    
+    tsne1 = select_coords
+    df_Xtsne = pd.DataFrame(tsne1)
+    df_Xtsne.to_csv(os.path.join(path_wd + '/user_inputs/metadata/X_imagetSNE_seeall.csv'), header=None, index=None)
+    
+    
 else: 
     #read in images
     FoV_path = os.path.join(path_wd + '/user_inputs/figures/')
@@ -1796,5 +1923,6 @@ curdoc().title = "Mistic: Image tSNE viewer"
 
 # cd image_tSNE_code/bokeh_GUI/bokeh-branch-2.3/examples/app
 # bokeh serve --port 5098 --show image_tSNE_GUI
+
 
 
