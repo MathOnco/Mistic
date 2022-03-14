@@ -1330,7 +1330,48 @@ else:
 
     df_Xtsne_m = pd.DataFrame(tsne)
     df_Xtsne_m.to_csv(os.path.join(path_wd + '/user_inputs/metadata/X_imagetSNE.csv'), header=None, index=None)
+    df_Xtsne_m.to_csv(os.path.join(path_wd + '/user_inputs/metadata/X_imagetSNE_user.csv'), header=None, index=None) 
+     
+
+    ##### for 'arrange in rows' option at the onset itself
+
+
+    # Minimum distance between samples
+    r = 2
+
+    width_1, height_1 = 20, 22
+
+    print('Arrange images side-by-side')
+
+    # Cell side length
+    a = r/np.sqrt(2)
+    # Number of cells in the x- and y-directions of the grid
+    nx, ny = int(width_1 / a) + 1, int(height_1 / a) + 1
+
+    # A list of coordinates in the grid of cells
+    coords_list = [(ix, iy) for ix in range(nx) for iy in range(ny)]
+
+
+    #logic to get grid points - 29th March 2021
+    m = np.int(np.floor(nx*ny/num_images))
+
+
+    row_needed = []
+    def multiples(m, num_images):
+        for i in range(num_images):
+            row_needed.append(i*m)
+
+    multiples(m,num_images)
+
+
+    select_coords = np.array(coords_list)[np.array(row_needed).flatten()]
+
+    print(type(select_coords))
     
+    tsne1 = select_coords
+    df_Xtsne = pd.DataFrame(tsne1)
+    df_Xtsne.to_csv(os.path.join(path_wd + '/user_inputs/metadata/X_imagetSNE_seeall.csv'), header=None, index=None)
+        
     ########################
 
 
@@ -1755,4 +1796,5 @@ curdoc().title = "Mistic: Image tSNE viewer"
 
 # cd image_tSNE_code/bokeh_GUI/bokeh-branch-2.3/examples/app
 # bokeh serve --port 5098 --show image_tSNE_GUI
+
 
