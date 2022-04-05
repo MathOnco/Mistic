@@ -51,7 +51,7 @@ Figure description: A sample Mistic GUI with user inputs is shown. **A.** User-i
        * Note: For the Stack Montage option, only the markers.csv file is required. 
     * Optional uploads:
       * Upload image tSNE co-ordinates as X_imagetSNE.csv
-        * If no user-generated tSNE co-ordinates are provided, Mistic will generate a set of random coordinates to render the images
+        * If no user-generated tSNE co-ordinates are provided, Mistic will generate a set of t-SNE coordinates to render the images
       * Upload image metadata such as 
         * Cluster labels as Cluster_categories.csv
         * Patient_ids as Patient_ids.csv
