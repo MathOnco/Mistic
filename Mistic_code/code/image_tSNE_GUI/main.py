@@ -10,19 +10,19 @@
 ### github version
 ### 19th Jan 2022
 ### added Patient id live canvas
-### 26th Jan 2022 
+### 26th Jan 2022 ###
 ### merging the stack montage code 
 ### prior version is main_rollback. 
 ### 14th Feb 2022
 ### adding codex, tcycif, vectra option 
 ### prior version is main_rollback_1
-### 20th Feb 2022
-### code cleanup for github upload (v.1.0.2)
 
-### 14th Mar 2022
-### added the user tsne as well 'arrange in rows' tsne generation code 
-### code cleanup for github upload (v.1.0.3)
+### 14th mar 2022
+### added the user tsne as well 'arrange in rows' (seeall) tsne generation code 
 
+## 8th April 2022
+## tsne and dpmm code added
+## code cleanup for github
 
 import os
 import sys
@@ -107,6 +107,7 @@ import skimage.io as io
 import tifffile
 from PIL import TiffImagePlugin
 
+from sklearn.mixture import BayesianGaussianMixture
 
 
 
@@ -1395,6 +1396,66 @@ else:
     num_images = count_images
     #generate random 2D coords for these images
 
+    ####  
+    #### tsne and clustering within mistic, if not provided by user 
+    #### 
+
+    num_markers = 6      
+    data_CM = np.zeros((1,num_markers)) # one row = one image with mean of markers in the columns, defaults to 6 markers 
+
+    for fname in os.listdir(FoV_path):
+        print(fname)
+        im1 = tifffile.imread(os.path.join(FoV_path+fname))
+        #if (rb_imtech_val ==2): #for codex
+        #    im = im.reshape(64,5040,9408) 
+ 
+
+
+        image_summary_vec = np.zeros((1,num_markers))
+        for m in range(num_markers):
+                image1 = im1[m]
+
+                median_filtered1 = scipy.ndimage.median_filter(image1, size=1)
+
+
+                thresh = threshold_otsu(median_filtered1)
+
+
+                bw = closing(image1 > thresh, square(1))
+
+                # remove artifacts connected to image border
+                cleared_imtsne = clear_border(bw)
+
+
+                image_summary_vec[0,m] = np.mean(cleared_imtsne) #mean of each channel m per image fname
+
+
+
+        data_CM = np.concatenate((data_CM,image_summary_vec),axis=0)
+    
+    data_CM = np.delete(data_CM, (0), axis=0)
+    
+    # perform tSNE
+    tsne = TSNE(n_components=2, verbose=1)#, perplexity=30, n_iter=900)
+    X_2d = tsne.fit_transform(data_CM)
+    
+    # Fit a Dirichlet process mixture of Gaussians using n components
+    bgm = BayesianGaussianMixture(n_components=3, random_state=42).fit(data_CM)
+    cluster_asgn = bgm.predict(data_CM)
+    
+    #save tSNE and cluster assignments
+    
+    df_Xtsne_u = pd.DataFrame(X_2d)
+    df_Xtsne_u.to_csv(os.path.join(path_wd + '/user_inputs/metadata/X_imagetSNE.csv'), header=None, index=None)
+    
+    
+    
+    fname = os.path.join(path_wd + '/user_inputs/metadata/Cluster_categories.csv')
+    if (os.path.isfile(fname)==False):
+        df_dpgmm_u = pd.DataFrame(cluster_asgn)
+        df_dpgmm_u.to_csv(os.path.join(path_wd + '/user_inputs/metadata/Cluster_categories.csv'), header=None, index=None)
+
+    ### end of tsne/clustering by mistic
     
     # Choose up to k points around each reference point as candidates for a new
     # sample point
@@ -1607,10 +1668,64 @@ if os.path.isfile(fname):
         cluster_anno_list.append('Cluster '+ str(clust_asgn_list_1[i]))  
 
 else:
-    for i in range(num_images):
-        color_vec_clasgn.append('gray') 
-        clust_asgn_list.append('nil')
-        cluster_anno_list.append('Cluster nil')
+    #for bayesian clustering, if not present
+    
+    num_markers = 6      
+    data_CM = np.zeros((1,num_markers)) # one row = one image with mean of markers in the columns, defaults to 6 markers 
+
+    for fname1 in os.listdir(FoV_path):
+        print(fname1)
+        im1 = tifffile.imread(os.path.join(FoV_path+fname1)) 
+ 
+
+
+        image_summary_vec = np.zeros((1,num_markers))
+        for m in range(num_markers):
+                image1 = im1[m]
+
+                median_filtered1 = scipy.ndimage.median_filter(image1, size=1)
+
+
+                thresh = threshold_otsu(median_filtered1)
+
+
+                bw = closing(image1 > thresh, square(1))
+
+                # remove artifacts connected to image border
+                cleared_imtsne = clear_border(bw)
+
+
+                image_summary_vec[0,m] = np.mean(cleared_imtsne) #mean of each channel m per image fname
+
+
+
+        data_CM = np.concatenate((data_CM,image_summary_vec),axis=0)
+    
+    data_CM = np.delete(data_CM, (0), axis=0)
+    
+
+    
+    # Fit a Dirichlet process mixture of Gaussians using n components
+    bgm = BayesianGaussianMixture(n_components=3, random_state=42).fit(data_CM)
+    cluster_asgn = bgm.predict(data_CM)
+
+    df_dpgmm_u = pd.DataFrame(cluster_asgn)
+    df_dpgmm_u.to_csv(os.path.join(path_wd + '/user_inputs/metadata/Cluster_categories.csv'), header=None, index=None)
+    
+    
+    fname2 = os.path.join(path_wd + '/user_inputs/metadata/Cluster_categories.csv')
+    color_vec_clasgn = []
+    cluster_anno_list = []
+    clust_asgn_list = []
+
+    clust_asgn_list_2 = np.array(pd.read_csv(fname2, header= None,index_col=None)).flatten()
+    for i in range(clust_asgn_list_2.shape[0]):
+   
+        color_vec_clasgn.append(colours_58[clust_asgn_list_2[i]])
+        clust_asgn_list.append(clust_asgn_list_2[i])
+        cluster_anno_list.append('Cluster '+ str(clust_asgn_list_2[i]))  
+
+    ## bayes clustering end
   
      
 
@@ -1923,6 +2038,4 @@ curdoc().title = "Mistic: Image tSNE viewer"
 
 # cd image_tSNE_code/bokeh_GUI/bokeh-branch-2.3/examples/app
 # bokeh serve --port 5098 --show image_tSNE_GUI
-
-
 
