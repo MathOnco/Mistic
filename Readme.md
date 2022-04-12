@@ -24,7 +24,7 @@ Figure description: A sample Mistic GUI with user inputs is shown. **A.** User-i
 
 ## Requirements
 
-* Python 3.6 (code also tested and runs on Python 3.7)
+* Python >= 3.6 
   * Install Python from here: https://www.python.org/downloads/
 <!---* bokeh 0.12.16 -->
   <!---* For installation, open terminal and type: ``` pip install bokeh ```-->
