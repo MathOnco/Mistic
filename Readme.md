@@ -65,13 +65,13 @@ Figure description: A sample Mistic GUI with user inputs is shown. **A.** User-i
 
 * The main application is located in the /image_tSNE_GUI folder:
   * ```Mistic_code/code/image_tSNE_GUI/```
-* Open a command prompt (or the Terminal application), change to the directory containing /code and type
-  *  ```pip install -r requirements.txt``` 
-* Upon successful completion of the previous step, Mistic can be run. To run the application, at the command prompt pointing to /code, type
+  
+* To run the application, open a command prompt (or the Terminal application), change to the directory containing /code and type:
   * ```bokeh serve --port 5098 --show image_tSNE_GUI```
   * This runs a bokeh server locally and will automatically open the interactive dashboard in your browser at http://localhost:5098/image_tSNE_GUI
 
 * For instructions on how to run Mistic on the t-CyCIF data, please check: https://mistic-rtd.readthedocs.io/en/latest/vignette_example_tcycif.html
+
 * For instructions on how to run Mistic on the toy data from our NSCLC Vectra FoVs, please check:https://mistic-rtd.readthedocs.io/en/latest/vignette_example_vectra.html
 
 
