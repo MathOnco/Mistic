@@ -30,10 +30,12 @@ Figure description: A sample Mistic GUI with user inputs is shown. **A.** User-i
   <!---* For installation, open terminal and type: ``` pip install bokeh ```-->
   <!---* To verify a successful installation, type: ``` bokeh info ```-->
   <!---* Further information: https://docs.bokeh.org/en/latest/docs/first_steps/installation.html -->
-* Open a command prompt (or the Terminal application) to download ``` pip ```. Type: 
-  * ``` curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py ```
-  * ``` python3 get-pip.py ``` and wait for the installation to complete
-  * Verify the ``` pip ``` installation by typing ``` pip --version ```
+* Open a command prompt (or the Terminal application):
+  * Download ``` pip ```. Type: 
+    * ``` curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py ```
+    * ``` python3 get-pip.py ``` and wait for the installation to complete
+    * Verify the ``` pip ``` installation by typing ``` pip --version ```
+  * ```pip install mistic ```
 
 ## Run the application
 
