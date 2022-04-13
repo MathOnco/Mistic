@@ -46,7 +46,6 @@ Figure description: A sample Mistic GUI with user inputs is shown. **A.** User-i
 * In the Mistic folder, navigate to /user_inputs folder to upload input files:
   * ```Mistic_code/code/user_inputs/```
   * Use the /figures folder to upload the multiplexed images
-     * Note that the /figures folder should not have any .txt or files such as .DS_Store. It should only contain the multiplexed images
   * Use the /metadata folder to 
     * Upload the imaging markers of interest as Markers_ids.csv and markers.csv. 
        * Example files are provided in the metadata folder
@@ -69,6 +68,7 @@ Figure description: A sample Mistic GUI with user inputs is shown. **A.** User-i
   
 * To run the application, open a command prompt (or the Terminal application), change to the directory containing /code and type:
   * ```find . | grep .git | xargs rm -rf```
+  * ```find . -name ".DS_Store" -delete```
   * ```bokeh serve --port 5098 --show image_tSNE_GUI```
   * This runs a bokeh server locally and will automatically open the interactive dashboard in your browser at http://localhost:5098/image_tSNE_GUI
 
