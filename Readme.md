@@ -56,6 +56,7 @@ Figure description: A sample Mistic GUI with user inputs is shown. **A.** User-i
         * If no user-generated tSNE co-ordinates are provided, Mistic will generate a set of t-SNE coordinates to render the images
       * Upload image metadata such as 
         * Cluster labels as Cluster_categories.csv
+          * If cluster labels are not provided, Mistic will cluster the images using a Bayesian mixture model. 
         * Patient_ids as Patient_ids.csv
         * Treatments as Treatment_catgories.csv
         * Patient response as Response_categories.csv 
