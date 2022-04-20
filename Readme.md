@@ -46,7 +46,7 @@ Figure description: A sample Mistic GUI with user inputs is shown. **A.** User-i
 * In the Mistic folder, navigate to /user_inputs folder to upload input files:
   * ```Mistic_code/code/user_inputs/```
   * Use the /figures folder to upload the multiplexed images
-    * Example NSCLC dataset is available at: https://doi.org/10.5281/zenodo.6131933 
+    * Example NSCLC Vectra dataset is available at: https://doi.org/10.5281/zenodo.6131933 
   * Use the /metadata folder to 
     * Upload the imaging markers of interest as Markers_ids.csv and markers.csv. 
        * Example files are provided in the metadata folder
