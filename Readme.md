@@ -68,9 +68,7 @@ Figure description: A sample Mistic GUI with user inputs is shown. **A.** User-i
   * ```Mistic_code/code/image_tSNE_GUI/```
   
 * To run the application, open a command prompt (or the Terminal application), change to the directory containing /code and type:
-  * ```find . | grep .git | xargs rm -rf```
-  * ```find . -name ".DS_Store" -delete```
-  * ```bokeh serve --port 5098 --show image_tSNE_GUI```
+  * ```bash mistic.sh```
   * This runs a bokeh server locally and will automatically open the interactive dashboard in your browser at http://localhost:5098/image_tSNE_GUI
 
 * For instructions on how to run Mistic on the t-CyCIF data, please check: https://mistic-rtd.readthedocs.io/en/latest/vignette_example_tcycif.html
