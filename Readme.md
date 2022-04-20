@@ -37,7 +37,7 @@ Figure description: A sample Mistic GUI with user inputs is shown. **A.** User-i
     * Verify the ``` pip ``` installation by typing ``` pip --version ```
   * ```pip install mistic ```
 
-## Run the application
+## Setting up Mistic
 
 * Download this code repository or Open Terminal and use `git clone`
 
@@ -64,10 +64,9 @@ Figure description: A sample Mistic GUI with user inputs is shown. **A.** User-i
     * Sample metadata files are provided for reference in separate folders for each imaging technique in the /metadata folder
     * If using the sample metadata, move the files from the specific folder into the /metadata folder
 
-* The main application is located in the /image_tSNE_GUI folder:
-  * ```Mistic_code/code/image_tSNE_GUI/```
+## Run Mistic
   
-* To run the application, open a command prompt (or the Terminal application), change to the directory containing /code and type:
+* Open a command prompt (or the Terminal application), change to the directory containing /code and type:
   * ```bash mistic.sh```
   * This runs a bokeh server locally and will automatically open the interactive dashboard in your browser at http://localhost:5098/image_tSNE_GUI
   * Enter the imaging format, montage or multiplexed views and other user options on the GUI and click ```Run```.
@@ -79,9 +78,10 @@ Figure description: A sample Mistic GUI with user inputs is shown. **A.** User-i
    where the 2nd term is the _process id_. Here this is '12519'.
   * Use this _process id_ to kill the process: ```kill -9 12519```
 
-* For instructions on how to run Mistic on the t-CyCIF data, please check: https://mistic-rtd.readthedocs.io/en/latest/vignette_example_tcycif.html
+* Examples:
+  * For instructions on how to run Mistic on the t-CyCIF data, please check: https://mistic-rtd.readthedocs.io/en/latest/vignette_example_tcycif.html
 
-* For instructions on how to run Mistic on the toy data from our NSCLC Vectra FoVs, please check:https://mistic-rtd.readthedocs.io/en/latest/vignette_example_vectra.html
+  * For instructions on how to run Mistic on the toy data from our NSCLC Vectra FoVs, please check:https://mistic-rtd.readthedocs.io/en/latest/vignette_example_vectra.html
 
 
 ## Additional information
