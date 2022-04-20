@@ -74,8 +74,8 @@ Figure description: A sample Mistic GUI with user inputs is shown. **A.** User-i
 * If you get an error: ```Cannot start Bokeh server, port 5098 is already in use```, then at the terminal issue: 
   * ```ps -ef | grep 5098```
   * You should see a line similar to the one below on the terminal:
-```55525 12519 11678   0  1:22AM ttys004    0:57.81 /opt/anaconda3/bin/python /opt/anaconda3/bin/bokeh serve --port 5098 --show image_tSNE_GUI``` where the 2nd term is the process id. Use this to kill the process as shown below.
-  * ```kill -9 12519```
+   ```55525 12519 11678   0  1:22AM ttys004    0:57.81 /opt/anaconda3/bin/python /opt/anaconda3/bin/bokeh serve --port 5098 --show image_tSNE_GUI``` where the 2nd term is the process id. 
+  * Use this process id to kill the process: ```kill -9 12519```
 
 * For instructions on how to run Mistic on the t-CyCIF data, please check: https://mistic-rtd.readthedocs.io/en/latest/vignette_example_tcycif.html
 
