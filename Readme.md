@@ -71,17 +71,18 @@ Figure description: A sample Mistic GUI with user inputs is shown. **A.** User-i
   * This runs a bokeh server locally and will automatically open the interactive dashboard in your browser at http://localhost:5098/image_tSNE_GUI
   * Enter the imaging format, montage or multiplexed views and other user options on the GUI and click ```Run```.
 
+* Examples for running Mistic:
+  * For instructions on how to run Mistic on the t-CyCIF data, please check: https://mistic-rtd.readthedocs.io/en/latest/vignette_example_tcycif.html
+
+  * For instructions on how to run Mistic on the toy data from our NSCLC Vectra FoVs, please check:https://mistic-rtd.readthedocs.io/en/latest/vignette_example_vectra.html
+
+
 * If you get an error: ```Cannot start Bokeh server, port 5098 is already in use```, then at the Terminal, issue: 
   * ```ps -ef | grep 5098```
   * You should see a line similar to the one below on the Terminal:
    ```55525 12519 11678   0  1:22AM ttys004    0:57.81 /opt/anaconda3/bin/python /opt/anaconda3/bin/bokeh serve --port 5098 --show image_tSNE_GUI``` 
    where the 2nd term is the _process id_. Here this is '12519'.
   * Use this _process id_ to kill the process: ```kill -9 12519```
-
-* Examples:
-  * For instructions on how to run Mistic on the t-CyCIF data, please check: https://mistic-rtd.readthedocs.io/en/latest/vignette_example_tcycif.html
-
-  * For instructions on how to run Mistic on the toy data from our NSCLC Vectra FoVs, please check:https://mistic-rtd.readthedocs.io/en/latest/vignette_example_vectra.html
 
 
 ## Additional information
