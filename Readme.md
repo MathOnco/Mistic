@@ -62,8 +62,8 @@ Figure description: A sample Mistic GUI with user inputs is shown. **A.** User-i
         * Treatments as Treatment_catgories.csv
         * Patient response as Response_categories.csv 
         * If any of these are unavailable, Mistic will use either the randomly-generated or user-provided tSNE points without any color coding i.e. dots are colored in gray.
-    * Sample metadata files are provided for reference in separate subfolders for each imaging technique in the /metadata folder
-    * If using the sample metadata, move the files from the specific subfolder into the /metadata folder
+        * Sample metadata files are provided for reference in separate subfolders for each imaging technique in the /metadata folder
+        * If using the sample metadata, move the files from the relevant subfolder into the /metadata folder
 
 ## Run Mistic
   
