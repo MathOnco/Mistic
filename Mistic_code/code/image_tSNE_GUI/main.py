@@ -16,13 +16,22 @@
 ### 14th Feb 2022
 ### adding codex, tcycif, vectra option 
 ### prior version is main_rollback_1
-
 ### 14th mar 2022
 ### added the user tsne as well 'arrange in rows' (seeall) tsne generation code 
 
+## 20th Feb 2022
+## this is the latest main.py, with dates and comments removed
+## for github upload
+
 ## 8th April 2022
+## 2nd rebuttal updates
 ## tsne and dpmm code added
+
+#### 21st April 2022
+#### CyCIF files
 ## code cleanup for github
+
+
 
 import os
 import sys
@@ -355,6 +364,10 @@ def generate_stack_montage(chk_box_marker_sm, rb_imtech_val, LABELS_MARKERS):
     df_Xtsne_touse.to_csv(os.path.join(path_wd + '/user_inputs/metadata/X_imagetSNE_touse_sm.csv'), header=None, index=None)
 
     tx, ty = tsne[:,0], tsne[:,1]
+    
+    tx[tx ==0] = 0.2
+    ty[ty ==0] = 0.1
+    
     tx = (tx-np.min(tx)) / (np.max(tx) - np.min(tx))
     ty = (ty-np.min(ty)) / (np.max(ty) - np.min(ty))
     print('###tx')
@@ -405,6 +418,8 @@ def generate_stack_montage(chk_box_marker_sm, rb_imtech_val, LABELS_MARKERS):
         elif (rb_imtech_val ==1): #t-CyCIF
             tile_1 = Image.fromarray(np.uint8(cm.hsv(tl)*500)) 
         elif (rb_imtech_val ==2): # CODEX
+             tile_1 = Image.fromarray(np.uint8(cm.jet(tl)*255)) 
+        elif (rb_imtech_val ==3): # CyCIF
              tile_1 = Image.fromarray(np.uint8(cm.jet(tl)*255)) 
 
         old_size = tile_1.size
@@ -614,6 +629,10 @@ def generate_image_tSNE(chk_box_marker,rb_val,rb_rs_val,rb_shf_val, rb_imtech_va
         df_Xtsne_touse.to_csv(os.path.join(path_wd + '/user_inputs/metadata/X_imagetSNE_touse.csv'), header=None, index=None)
             
         tx, ty = tsne[:,0], tsne[:,1]
+        
+        tx[tx ==0] = 0.2
+        ty[ty ==0] = 0.1
+        
         tx = (tx-np.min(tx)) / (np.max(tx) - np.min(tx))
         ty = (ty-np.min(ty)) / (np.max(ty) - np.min(ty))
     
@@ -684,7 +703,8 @@ def generate_image_tSNE(chk_box_marker,rb_val,rb_rs_val,rb_shf_val, rb_imtech_va
                 tile_1 = Image.fromarray(np.uint8(cm.jet(tl)*255)) 
             elif (rb_imtech_val ==2): # CODEX
                  tile_1 = Image.fromarray(np.uint8(cm.jet(tl)*255)) 
-
+            elif (rb_imtech_val ==3): # CyCIF
+                 tile_1 = Image.fromarray(np.uint8(cm.jet(tl)*255)) 
 
             old_size = tile_1.size
 
@@ -790,6 +810,10 @@ def generate_image_tSNE(chk_box_marker,rb_val,rb_rs_val,rb_shf_val, rb_imtech_va
         
         
         tx, ty = tsne[:,0], tsne[:,1]
+        
+        tx[tx ==0] = 0.2
+        ty[ty ==0] = 0.1
+        
         tx = (tx-np.min(tx)) / (np.max(tx) - np.min(tx))
         ty = (ty-np.min(ty)) / (np.max(ty) - np.min(ty))
             
@@ -861,6 +885,9 @@ def generate_image_tSNE(chk_box_marker,rb_val,rb_rs_val,rb_shf_val, rb_imtech_va
                 tile_1 = Image.fromarray(np.uint8(cm.jet(tl)*255)) 
             elif (rb_imtech_val ==2): # CODEX
                  tile_1 = Image.fromarray(np.uint8(cm.jet(tl)*255)) 
+            elif (rb_imtech_val ==3): # CyCIF
+                 tile_1 = Image.fromarray(np.uint8(cm.jet(tl)*255)) 
+                    
             old_size = tile_1.size
 
             print(pat_ind_list[shf_N[k]])
@@ -1067,9 +1094,9 @@ def create_figure(stack_montage_flag):
 
          
     
-    if(rb_rs=='Generate new co-ordinates'):
+    if(rb_rs=='Generate random co-ordinates'):
         rb_rs_val = 1
-    elif(rb_rs=='Use pre-defined co-ordinates'):
+    elif(rb_rs=='Use t-SNE co-ordinates'):
         rb_rs_val = 0
     elif(rb_rs == 'Arrange in rows'):
         rb_rs_val = 2
@@ -1088,9 +1115,10 @@ def create_figure(stack_montage_flag):
         rb_imtech_val = 1
     elif (rb_imtech=='CODEX'):
         rb_imtech_val = 2
-        
+    elif (rb_imtech=='CyCIF'):
+        rb_imtech_val = 3     
    
-    ## adding in the codex, vectra, tcycif options
+    ## adding in the codex, vectra, tcycif, cycif options
     # collecting the marker names for tcycif/codex stack montage
 
     cluster_ms_list = ['nil'] * len(LABELS_MARKERS)#[]
@@ -1167,6 +1195,13 @@ def create_figure(stack_montage_flag):
             wc = [150] * len(LABELS_MARKERS)      
             wc[0] = 300 #
             wc[6] = 100
+            
+        elif (rb_imtech_val ==3):
+            wc = [150] * len(LABELS_MARKERS)      
+            wc[1] = 100 
+            wc[2] = 300
+ 
+        cluster_ms_list = ['nil'] * num_images #[]  
             
             
             
@@ -1338,6 +1373,10 @@ if os.path.isfile(fname):
 
     tsne = np.asarray(samples)
     tx, ty = tsne[:,0], tsne[:,1]
+    
+    tx[tx ==0] = 0.2
+    ty[ty ==0] = 0.1
+    
     tx = (tx-np.min(tx)) / (np.max(tx) - np.min(tx))
     ty = (ty-np.min(ty)) / (np.max(ty) - np.min(ty))  
 
@@ -1382,6 +1421,9 @@ if os.path.isfile(fname):
     print(type(select_coords))
     
     tsne1 = select_coords
+    
+    tsne1[tsne1 ==0] = 0.2
+        
     df_Xtsne = pd.DataFrame(tsne1)
     df_Xtsne.to_csv(os.path.join(path_wd + '/user_inputs/metadata/X_imagetSNE_seeall.csv'), header=None, index=None)
     
@@ -1400,7 +1442,13 @@ else:
     #### tsne and clustering within mistic, if not provided by user 
     #### 
 
-    num_markers = 6      
+    im1 = tifffile.imread(os.path.join(FoV_path+fname))
+    
+    if (im1.shape[0] ==4):
+        num_markers = 4
+    else:
+        num_markers = 6   
+        
     data_CM = np.zeros((1,num_markers)) # one row = one image with mean of markers in the columns, defaults to 6 markers 
 
     for fname in os.listdir(FoV_path):
@@ -1513,11 +1561,15 @@ else:
 
     tsne = np.asarray(samples)
     tx, ty = tsne[:,0], tsne[:,1]
+    
+    tx[tx ==0] = 0.2
+    ty[ty ==0] = 0.1
+    
     tx = (tx-np.min(tx)) / (np.max(tx) - np.min(tx))
     ty = (ty-np.min(ty)) / (np.max(ty) - np.min(ty))  
 
     df_Xtsne_m = pd.DataFrame(tsne)
-    df_Xtsne_m.to_csv(os.path.join(path_wd + '/user_inputs/metadata/X_imagetSNE.csv'), header=None, index=None)
+    #df_Xtsne_m.to_csv(os.path.join(path_wd + '/user_inputs/metadata/X_imagetSNE.csv'), header=None, index=None)
     df_Xtsne_m.to_csv(os.path.join(path_wd + '/user_inputs/metadata/X_imagetSNE_user.csv'), header=None, index=None) 
      
 
@@ -1557,6 +1609,9 @@ else:
     print(type(select_coords))
     
     tsne1 = select_coords
+
+    tsne1[tsne1 ==0] = 0.2
+    
     df_Xtsne = pd.DataFrame(tsne1)
     df_Xtsne.to_csv(os.path.join(path_wd + '/user_inputs/metadata/X_imagetSNE_seeall.csv'), header=None, index=None)
         
@@ -1669,8 +1724,23 @@ if os.path.isfile(fname):
 
 else:
     #for bayesian clustering, if not present
+
     
-    num_markers = 6      
+    
+    FoV_path = os.path.join(path_wd + '/user_inputs/figures/')
+
+    #sorted input data add on 17th Feb 2022
+    for fname in sorted(os.listdir(FoV_path)):
+        print(fname)
+
+    
+    im1 = tifffile.imread(os.path.join(FoV_path+fname))
+    
+    if (im1.shape[0] ==4):
+        num_markers = 4
+    else:
+        num_markers = 6  
+    
     data_CM = np.zeros((1,num_markers)) # one row = one image with mean of markers in the columns, defaults to 6 markers 
 
     for fname1 in os.listdir(FoV_path):
@@ -1714,12 +1784,10 @@ else:
     
     
     fname2 = os.path.join(path_wd + '/user_inputs/metadata/Cluster_categories.csv')
-    color_vec_clasgn = []
-    cluster_anno_list = []
-    clust_asgn_list = []
+
 
     clust_asgn_list_2 = np.array(pd.read_csv(fname2, header= None,index_col=None)).flatten()
-    for i in range(clust_asgn_list_2.shape[0]):
+    for i in range(num_images): 
    
         color_vec_clasgn.append(colours_58[clust_asgn_list_2[i]])
         clust_asgn_list.append(clust_asgn_list_2[i])
@@ -1777,11 +1845,12 @@ for i in range(num_images): #clust_patid_list_1.shape[0]):
 #################
 
 RB_1 = ['Based on Response', 'Based on Treatment','Based on Clusters','Based on Patient id','No'] 
-RB_2 = ['Generate new co-ordinates', 'Use pre-defined co-ordinates', 'Arrange in rows']
+
+RB_2 = ['Generate random co-ordinates', 'Use t-SNE co-ordinates', 'Arrange in rows']
 
 RB_3 = ['Yes', 'No']
 
-RB_4 = ['Vectra', 't-CyCIF', 'CODEX']
+RB_4 = ['Vectra', 't-CyCIF', 'CODEX', 'CyCIF']
 
 TS_1 = ['black','gray', 'dark blue']
 
