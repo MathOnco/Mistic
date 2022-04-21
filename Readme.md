@@ -1,6 +1,6 @@
 # Mistic: image tSNE visualizer
 
-This is a Python tool using the Bokeh library to view multiple multiplex images simultaneously. The code has been tested on 7-panel Vectra TIFF, 32- & 64-panel CODEX TIFF, 16-panel CODEX QPTIFF and 44-panel t-CyCIF TIFF images.
+This is a Python tool using the Bokeh library to view multiple multiplex images simultaneously. The code has been tested on 7-panel Vectra TIFF, 32- & 64-panel CODEX TIFF, 16-panel CODEX QPTIFF, 4-panel CyCIF TIFF, and 44-panel t-CyCIF TIFF images.
 
 Mistic's GUI with user inputs is shown below:
 
@@ -13,7 +13,7 @@ Figure description: A sample Mistic GUI with user inputs is shown. **A.** User-i
 * Two canvases: 
   *   still canvas with the image tSNE rendering 
   *   live canvases with tSNE scatter plots for image metadata rendering
-* Dropdown option to select the imaging technique: Vectra, t-CyCIF, or CODEX
+* Dropdown option to select the imaging technique: Vectra, CyCIF, t-CyCIF, or CODEX
 * Option to choose between Stack montage view or multiple multiplexed images by selecting the markers to be visualised at once
 * Option to place a border around each image based on image metadata
 * Option to use a pre-defined tSNE or generate a new set of tSNE co-ordinates
@@ -49,7 +49,7 @@ Figure description: A sample Mistic GUI with user inputs is shown. **A.** User-i
     * Example NSCLC Vectra dataset is available at: https://doi.org/10.5281/zenodo.6131933 
   * Use the /metadata folder to 
     * Upload the imaging markers of interest as Markers_ids.csv and markers.csv. 
-       * Example files are provided in the subfolders: Vectra, t-CyCIF and CODEX 
+       * Example files are provided in the subfolders: Vectra, CyCIF, t-CyCIF and CODEX 
        * Move the files from the relevant subfolder into the /metadata folder
        * Note: For the Stack Montage option, only the markers.csv file is required
     * Optional uploads:
@@ -62,7 +62,7 @@ Figure description: A sample Mistic GUI with user inputs is shown. **A.** User-i
         * Treatments as Treatment_catgories.csv
         * Patient response as Response_categories.csv 
         * If any of these are unavailable, Mistic will use either the randomly-generated or user-provided tSNE points without any color coding i.e. dots are colored in gray.
-        * Sample metadata files are provided for reference in separate subfolders for each imaging technique (Vectra, t-CyCIF and CODEX) in the /metadata folder
+        * Sample metadata files are provided for reference in separate subfolders for each imaging technique (Vectra, CyCIF, t-CyCIF and CODEX) in the /metadata folder
         * If using the sample metadata, move the files from the relevant subfolder into the /metadata folder
 
 ## Run Mistic
