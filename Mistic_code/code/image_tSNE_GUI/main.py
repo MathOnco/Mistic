@@ -1453,6 +1453,9 @@ else:
     for fname in os.listdir(FoV_path):
         print(fname)
         im1 = tifffile.imread(os.path.join(FoV_path+fname))
+        if ((im1.shape[0]==16) and (im1.shape[1]==4) and (im1.shape[2]==5040) and (im1.shape[3]==9408)): #for codex intake
+            im1 = im1.reshape(64,5040,9408) 
+            
         #if (rb_imtech_val ==2): #for codex
         #    im = im.reshape(64,5040,9408) 
  
@@ -1746,7 +1749,8 @@ else:
         print(fname1)
         im1 = tifffile.imread(os.path.join(FoV_path+fname1)) 
  
-
+        if ((im1.shape[0]==16) and (im1.shape[1]==4) and (im1.shape[2]==5040) and (im1.shape[3]==9408)): #for codex intake 
+            im1 = im1.reshape(64,5040,9408) 
 
         image_summary_vec = np.zeros((1,num_markers))
         for m in range(num_markers):
