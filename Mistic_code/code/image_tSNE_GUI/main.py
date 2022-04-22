@@ -32,7 +32,6 @@
 ## code cleanup for github
 
 
-
 import os
 import sys
 import random
@@ -1444,8 +1443,8 @@ else:
 
     im1 = tifffile.imread(os.path.join(FoV_path+fname))
     
-    if (im1.shape[0] ==4):
-        num_markers = 4
+    if (im1.shape[0] < 6):
+        num_markers = im1.shape[0]
     else:
         num_markers = 6   
         
@@ -1736,8 +1735,8 @@ else:
     
     im1 = tifffile.imread(os.path.join(FoV_path+fname))
     
-    if (im1.shape[0] ==4):
-        num_markers = 4
+    if (im1.shape[0] < 6):
+        num_markers = im1.shape[0]
     else:
         num_markers = 6  
     
