@@ -90,7 +90,7 @@ Figure description: A sample Mistic GUI with user inputs is shown. **A.** User-i
 
 * Paper on bioRxiv: https://www.biorxiv.org/content/10.1101/2021.10.08.463728v1
 * Documentation: https://mistic-rtd.readthedocs.io
-* Code has been published at Zenodo: https://doi.org/10.5281/zenodo.5912169 (Mistic Version v1.0.2)
+* Code has been published at Zenodo: https://doi.org/10.5281/zenodo.5912169
 * Example NSCLC Vectra images are published here: https://doi.org/10.5281/zenodo.6131933
 * Mistic is highlighted on Bokeh's user showcase: http://bokeh.org/
 
