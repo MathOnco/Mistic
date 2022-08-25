@@ -2,6 +2,8 @@
 
 This is a Python tool using the Bokeh library to view multiple multiplex images simultaneously. The code has been tested on 7-panel Vectra TIFF, 32- & 64-panel CODEX TIFF, 16-panel CODEX QPTIFF, 4-panel CyCIF TIFF, and 44-panel t-CyCIF TIFF images.
 
+Mistic is published:[Patterns (2022)](https://www.cell.com/patterns/fulltext/S2666-3899(22)00120-9).
+
 Mistic's GUI with user inputs is shown below:
 
 <img src=/fig_readme/Figure_2.jpg width="80%"></img>
